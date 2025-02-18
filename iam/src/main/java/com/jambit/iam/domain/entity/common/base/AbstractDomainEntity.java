@@ -19,8 +19,9 @@ import java.util.UUID;
 @MappedSuperclass
 public abstract class AbstractDomainEntity {
 
-    @Column(name = "id", updatable = false, nullable = false, unique = true, columnDefinition = "VARCHAR(255)")
+    @Column(name = "id", updatable = false, nullable = false, unique = true, columnDefinition = "UUID")
     @GeneratedValue
+    
     @Id
     protected UUID id;
 }

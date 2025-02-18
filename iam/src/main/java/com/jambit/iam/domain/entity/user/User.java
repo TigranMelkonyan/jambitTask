@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
+import java.util.StringJoiner;
 
 /**
  * Created by Tigran Melkonyan
@@ -21,6 +22,9 @@ import javax.persistence.Table;
 @Getter
 @Setter
 public class User extends AuditableBaseEntity {
+    
+    @Column(nullable = false, unique = true)
+    private String username;
 
     @Column(unique = true, nullable = false)
     private String email;
@@ -45,5 +49,15 @@ public class User extends AuditableBaseEntity {
     @Override
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", User.class.getSimpleName() + "[", "]")
+                .add("username='" + username + "'")
+                .add("email='" + email + "'")
+                .add("role=" + role)
+                .add("active=" + active)
+                .toString();
     }
 }
