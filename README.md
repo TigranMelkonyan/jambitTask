@@ -20,11 +20,27 @@
 
 ### Default IAM users
 
-  password: Jambit123@
-  userName: jambittestuser1
+    password: Jambit123@
+    userName: jambittestuser1
+  
+    password: Jambit321@
+    userName: jambittestuser2
+  
+    password: Jambit213@
+    userName: jambittestuser3
 
-  password: Jambit321@
-  userName: jambittestuser2
+### OAUTH API Description
 
-  password: Jambit213@
-  userName: jambittestuser3
+* [swagger url](http://localhost:8081/swagger-ui.html) 
+
+
+* [retrieve jwt access token]
+
+      curl -X POST "http://localhost:8081/iam/oauth/token" \
+          -H "Accept: */*" \
+          -H "Content-Type: application/json" \
+          -d '{
+          "password": {password},
+          "userName": {userName}
+      }'
+
