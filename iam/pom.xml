@@ -25,6 +25,7 @@
         <jjwt.version>0.9.1</jjwt.version>
         <springfox.version>2.9.2</springfox.version>
         <springfox-ui.version>2.9.2</springfox-ui.version>
+        <flyway.version>7.15.0</flyway.version>
     </properties>
 
     <dependencies>
@@ -111,12 +112,18 @@
             <artifactId>springfox-swagger2</artifactId>
             <version>${springfox.version}</version>
         </dependency>
+
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
             <version>${springfox-ui.version}</version>
         </dependency>
-        
+
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>${flyway.version}</version>
+        </dependency>        
     </dependencies>
 
     <build>
