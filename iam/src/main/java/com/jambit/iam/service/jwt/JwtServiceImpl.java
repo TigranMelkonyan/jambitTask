@@ -4,6 +4,7 @@ import com.jambit.iam.conf.security.jwt.JwtClaim;
 import com.jambit.iam.controller.rest.model.request.CreateUserTokenRequest;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import java.util.UUID;
  * Time: 12:13 PM
  */
 @Service
+@Log4j2
 public class JwtServiceImpl implements JwtService {
 
     public static final SignatureAlgorithm algorithm = SignatureAlgorithm.HS256;
@@ -43,6 +45,7 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public String createJwt(final CreateUserTokenRequest userDetails) {
+        log.info("Creating jwt token for user with id - {} ", userDetails.getInfo().getUserId());
         final var jti = UUID.randomUUID().toString();
         Date expirationDate = Date.from(Instant.now().plus(validity));
         final Key signingKey = new SecretKeySpec(jwtSecret.getBytes(), algorithm.getJcaName());
@@ -51,7 +54,7 @@ public class JwtServiceImpl implements JwtService {
         claims.put(JwtClaim.SUB.getValue(), userDetails.getInfo().getUserId());
         claims.put(JwtClaim.EMAIL.getValue(), userDetails.getInfo().getEmail());
         claims.put(JwtClaim.AUTHORITIES.getValue(), userDetails.getInfo().getRole());
-        return Jwts.builder()
+        String token = Jwts.builder()
                 .setId(jti)
                 .setIssuedAt(new Date())
                 .setExpiration(expirationDate)
@@ -59,6 +62,8 @@ public class JwtServiceImpl implements JwtService {
                 .addClaims(claims)
                 .signWith(algorithm, signingKey)
                 .compact();
+        log.info("Successfully created jwt token for user with id - {} ", userDetails.getInfo().getUserId());
+        return token;
     }
 
 }

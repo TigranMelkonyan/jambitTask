@@ -23,6 +23,8 @@
         <mapstruct-processor.version>1.6.1</mapstruct-processor.version>
         <lombok.version>1.18.36</lombok.version>
         <jjwt.version>0.9.1</jjwt.version>
+        <springfox.version>2.9.2</springfox.version>
+        <springfox-ui.version>2.9.2</springfox-ui.version>
     </properties>
 
     <dependencies>
@@ -102,6 +104,17 @@
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
             <version>${jjwt.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${springfox.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${springfox-ui.version}</version>
         </dependency>
         
     </dependencies>
