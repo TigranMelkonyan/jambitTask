@@ -11,7 +11,7 @@ import com.jambit.iam.domain.model.user.CreateUserModel;
 import com.jambit.iam.domain.model.user.UpdateUserModel;
 import com.jambit.iam.repository.user.UserRepository;
 import com.jambit.iam.service.user.UserService;
-import com.jambit.iam.service.user.validator.ModelValidator;
+import com.jambit.iam.service.validator.ModelValidator;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,6 +62,19 @@ public class UserServiceImpl implements UserService {
         Assert.notNull(id, "id must not be null");
         User result = repository.getById(id);
         log.info("Successfully retrieved user with id - {}, result - {}", id, result);
+        return result;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public User getByUserName(final String userName) {
+        log.info("Retrieving user with user name - {} ", userName);
+        Assert.notNull(userName, "userName must not be null");
+        User result = repository.findByUsername(userName)
+                .orElseThrow(() -> new RecordConflictException(
+                        String.format("User with name - %s not exists", userName),
+                        ErrorCode.NOT_EXISTS_EXCEPTION));
+        log.info("Successfully retrieved user with user name - {}, result - {}", userName, result);
         return result;
     }
 
