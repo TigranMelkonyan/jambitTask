@@ -23,7 +23,7 @@ import java.util.StringJoiner;
 @Setter
 public class User extends AuditableBaseEntity {
     
-    @Column(nullable = false, unique = true)
+    @Column(unique = true, nullable = false)
     private String username;
 
     @Column(unique = true, nullable = false)

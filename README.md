@@ -17,3 +17,14 @@
 * [Spring Data JPA Documentation](https://docs.spring.io/spring-data/jpa/reference/)
 * [PostgreSQL Documentation](https://www.postgresql.org/docs/)
 * [Maven Documentation](https://maven.apache.org/guides/index.html)
+
+### Default IAM users
+
+  password: Jambit123@
+  userName: jambittestuser1
+
+  password: Jambit321@
+  userName: jambittestuser2
+
+  password: Jambit213@
+  userName: jambittestuser3
