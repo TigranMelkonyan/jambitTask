@@ -2,7 +2,9 @@ package com.jambit.iam.domain.model.user;
 
 import com.jambit.iam.domain.model.common.role.Role;
 import com.jambit.iam.domain.model.common.validate.ValidatableModel;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -14,7 +16,9 @@ import javax.validation.constraints.Size;
  * Date: 2/18/25
  * Time: 7:48 PM
  */
-@Data
+@Getter
+@EqualsAndHashCode
+@ToString
 public class UpdateUserModel implements ValidatableModel {
 
     @NotEmpty

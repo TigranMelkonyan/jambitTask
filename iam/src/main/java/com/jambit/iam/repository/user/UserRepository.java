@@ -4,6 +4,7 @@ import com.jambit.iam.domain.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -17,4 +18,6 @@ public interface UserRepository extends JpaRepository<User, UUID>, UserRepositor
     boolean existsByEmail(final String email);
     
     boolean existsByUsername(final String userName);
+
+    Optional<User> findByUsername(final String userName);
 }

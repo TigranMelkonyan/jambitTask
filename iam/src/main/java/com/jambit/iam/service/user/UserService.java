@@ -19,6 +19,8 @@ public interface UserService {
 
     User getById(final UUID id);
 
+    User getByUserName(final String userName);
+
     User update(final UUID id, final UpdateUserModel model);
 
     void delete(final UUID id, final boolean deleteFromDb);

@@ -1,4 +1,4 @@
-package com.jambit.iam.service.user.validator;
+package com.jambit.iam.service.validator;
 
 import com.jambit.iam.domain.model.common.validate.ValidatableModel;
 import org.springframework.beans.factory.annotation.Autowired;

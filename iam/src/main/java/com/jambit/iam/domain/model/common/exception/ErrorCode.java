@@ -7,5 +7,8 @@ package com.jambit.iam.domain.model.common.exception;
  */
 public enum ErrorCode {
     EXISTS_EXCEPTION,
-    NOT_EXISTS_EXCEPTION
+    NOT_EXISTS_EXCEPTION,
+    ILLEGAL_ARGUMENT,
+    INVALID_CREDENTIALS,
+    WRONG_PASSWORD
 }
