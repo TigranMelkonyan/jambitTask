@@ -2,7 +2,9 @@ package com.jambit.iam.domain.entity.user;
 
 import com.jambit.iam.domain.entity.common.audit.AuditableBaseEntity;
 import com.jambit.iam.domain.model.common.role.Role;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Column;
@@ -21,6 +23,8 @@ import java.util.StringJoiner;
 @Table(name = "iam_user")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class User extends AuditableBaseEntity {
     
     @Column(unique = true, nullable = false)
