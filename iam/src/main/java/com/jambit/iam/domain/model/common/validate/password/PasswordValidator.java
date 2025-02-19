@@ -14,11 +14,10 @@ public class PasswordValidator implements ConstraintValidator<ValidPassword, Str
 
     @Override
     public boolean isValid(String password, ConstraintValidatorContext context) {
-        if (!StringUtils.hasText(password)) {
+        if (!StringUtils.hasText(password) || password.length() < 8) {
             return false;
         }
-
-        String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,50}$";
+        String passwordRegex = "(?=.*[0-9])(?=.*[a-zA-Z]).*";
         return password.matches(passwordRegex);
     }
 }

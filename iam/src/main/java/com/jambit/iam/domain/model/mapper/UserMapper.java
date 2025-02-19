@@ -6,6 +6,7 @@ import com.jambit.iam.domain.model.user.UpdateUserModel;
 import com.jambit.iam.util.PasswordUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 
 /**
@@ -32,7 +33,7 @@ public interface UserMapper {
     @Mapping(target = "deletedOn", ignore = true)
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "active", ignore = true)
-    User updateModelToEntity(UpdateUserModel model);
+    User updateModelToEntity(UpdateUserModel model, @MappingTarget User entity);
 
     @Named("encodePassword")
     default String encodePassword(String password) {

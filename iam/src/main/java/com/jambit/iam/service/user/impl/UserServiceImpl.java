@@ -60,7 +60,9 @@ public class UserServiceImpl implements UserService {
     public User getById(final UUID id) {
         log.info("Retrieving user with id - {} ", id);
         Assert.notNull(id, "id must not be null");
-        User result = repository.getById(id);
+        User result = repository.findById(id).orElseThrow(() -> new RecordConflictException(
+                String.format("User with id - %s not exists", id),
+                ErrorCode.NOT_EXISTS_EXCEPTION));
         log.info("Successfully retrieved user with id - {}, result - {}", id, result);
         return result;
     }
@@ -84,9 +86,14 @@ public class UserServiceImpl implements UserService {
         log.info("Updating user with id - {} ", id);
         Assert.notNull(id, "id must not be null");
         validator.validate(model);
-        assertNotExistsWithEmail(model.getEmail());
-        assertNotExistsWithUserName(model.getUsername());
-        User entity = mapper.updateModelToEntity(model);
+        User user = getById(id);
+        if (!user.getUsername().equals(model.getUsername())) {
+            assertNotExistsWithUserName(model.getUsername());
+        }
+        if (!user.getEmail().equals(model.getEmail())) {
+            assertNotExistsWithEmail(model.getEmail());
+        }
+        User entity = mapper.updateModelToEntity(model, user);
         User result = repository.save(entity);
         log.info("Successfully updated user with id - {}, result - {}", id, result);
         return result;
@@ -97,11 +104,11 @@ public class UserServiceImpl implements UserService {
     public void delete(final UUID id, final boolean deleteFromDb) {
         log.info("Deleting user with id - {} ", id);
         Assert.notNull(id, "id must not be null");
+        User user = getById(id);
         if (deleteFromDb) {
-            repository.deleteById(id);
+            repository.delete(user);
             log.info("Successfully deleted user with id - {} from db", id);
         } else {
-            User user = repository.getById(id);
             user.setStatus(ModelStatus.DELETED);
             repository.save(user);
             log.info("Successfully soft deleted user with id - {} ", id);
@@ -114,7 +121,7 @@ public class UserServiceImpl implements UserService {
     public void inactivateUser(final UUID id) {
         log.info("Inactivating user with id - {} ", id);
         Assert.notNull(id, "id must not be null");
-        User user = repository.getById(id);
+        User user = getById(id);
         user.setActive(false);
         User result = repository.save(user);
         log.info("Successfully inactivated user with id - {} result - {} ", id, result);

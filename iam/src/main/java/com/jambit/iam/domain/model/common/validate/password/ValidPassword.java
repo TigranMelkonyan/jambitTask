@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
  * Date: 2/18/25
  * Time: 5:28 PM
  */
-@Target(ElementType.FIELD)
+@Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = PasswordValidator.class)
 public @interface ValidPassword {
