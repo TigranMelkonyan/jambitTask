@@ -23,7 +23,6 @@ import java.util.UUID;
 public class FeedbackTargetQueryService {
 
     private final FeedbackTargetQueryHandler feedbackTargetQueryHandler;
-    private final ModelValidator modelValidator;
 
     public FeedbackTarget findById(final UUID id) {
         log.info("Processing retrieving feedback target with id - {} ", id);
@@ -33,7 +32,7 @@ public class FeedbackTargetQueryService {
 
     public PageModel<FeedbackTarget> getALl(final GetAllFeedbackTargetsQuery query) {
         log.info("Processing retrieving feedback targets with page - {} size - {}", query.getPage(), query.getSize());
-        modelValidator.validate(query);
+        ModelValidator.validate(query);
         return feedbackTargetQueryHandler.handle(query);
     }
 

@@ -7,7 +7,8 @@ package com.jambit.domain.common.exception;
  */
 public enum ErrorCode {
     EXISTS_EXCEPTION,
-    NOT_EXISTS_EXCEPTION,
+    RECORD_CONFLICT,
+    NOT_FOUND,
     ILLEGAL_ARGUMENT,
     INVALID_CREDENTIALS,
 }

@@ -22,11 +22,10 @@ import java.util.UUID;
 public class FeedbackCommandService {
 
     private final FeedbackCommandHandler feedbackCommandHandler;
-    private final ModelValidator modelValidator;
 
     public Feedback create(final CreateFeedbackCommand command) {
         log.info("Processing feedback create command for user with id - {} ", command.getUserId());
-        modelValidator.validate(command);
+        ModelValidator.validate(command);
         return feedbackCommandHandler.handle(command);
     }
 

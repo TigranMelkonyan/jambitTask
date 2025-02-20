@@ -1,7 +1,7 @@
 package com.jambit.iam.service.validator;
 
 import com.jambit.iam.domain.model.common.validate.ValidatableModel;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import javax.validation.ConstraintViolation;
@@ -16,14 +16,10 @@ import java.util.Set;
  * Time: 11:36 PM
  */
 @Component
+@RequiredArgsConstructor
 public class ModelValidator {
 
     private final Validator validator;
-
-    @Autowired
-    public ModelValidator(Validator validator) {
-        this.validator = validator;
-    }
 
     public <T extends ValidatableModel> void validate(T model) {
         if (model == null) {

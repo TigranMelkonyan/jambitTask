@@ -14,6 +14,8 @@ public interface FeedbackTargetRepository {
 
     FeedbackTarget getById(final UUID id);
 
+    boolean existsByName(final String name);
+
     FeedbackTarget save(final FeedbackTarget feedbackTarget);
     
     PageModel<FeedbackTarget> getAll(final int page, final int size);

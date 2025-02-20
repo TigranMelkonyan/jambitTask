@@ -2,6 +2,7 @@ package com.jambit.application.command.handler;
 
 import com.jambit.application.command.CreateFeedbackTargetCommand;
 import com.jambit.application.mapper.FeedbackTargetMapper;
+import com.jambit.domain.common.exception.RecordPersistenceException;
 import com.jambit.domain.feedback.FeedbackTarget;
 import com.jambit.domain.repository.feedback.target.FeedbackTargetRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,10 @@ public class FeedbackTargetCommandHandler {
 
     public FeedbackTarget handle(final CreateFeedbackTargetCommand command) {
         log.info("Creating feedback target with target type- {} ", command.getTargetType());
+        if (repository.existsByName(command.getName())) {
+            throw new RecordPersistenceException(String
+                    .format("Feedback target already exists with name - %s", command.getName()));
+        }
         FeedbackTarget feedbackTarget = mapper.createFeedbackTargetCommandToEntity(command);
         FeedbackTarget result = repository.save(feedbackTarget);
         log.info("Successfully created feedback target, result - {}", result);
