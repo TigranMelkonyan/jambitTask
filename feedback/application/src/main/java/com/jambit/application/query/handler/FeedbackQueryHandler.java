@@ -22,17 +22,24 @@ public class FeedbackQueryHandler {
 
     private final FeedbackRepository feedbackRepository;
 
-    public Feedback findById(final UUID id) {
+    public Feedback findByUserId(final UUID id) {
         log.info("Retrieving feedback with user id - {} ", id);
         Feedback feedback = feedbackRepository.getByUserId(id);
         log.info("Successfully retrieved feedback with user id - {}, result - {}", id, feedback);
         return feedback;
     }
 
+    public Feedback findById(final UUID id) {
+        log.info("Retrieving feedback with  id - {} ", id);
+        Feedback feedback = feedbackRepository.findById(id);
+        log.info("Successfully retrieved feedback with  id - {}, result - {}", id, feedback);
+        return feedback;
+    } 
+
     public PageModel<Feedback> handle(final GetAllFeedbacksByTargetQuery query) {
         log.info("Retrieving feedbacks with target id - {} ", query.getTargetId());
         PageModel<Feedback> pages = feedbackRepository
-                .getAllByTargetId(query.getTargetId(), query.getPage(), query.getSize());
+                .getAllByFeedbackTargetId(query.getTargetId(), query.getPage(), query.getSize());
         log.info("Successfully retrieved feedbacks with target id - {}, result - {}", query.getTargetId(), pages);
         return pages;
     }

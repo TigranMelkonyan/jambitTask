@@ -19,11 +19,10 @@ import org.springframework.stereotype.Service;
 public class FeedbackTargetCommandService {
 
     private final FeedbackTargetCommandHandler feedbackTargetCommandHandler;
-    private final ModelValidator modelValidator;
 
     public FeedbackTarget create(final CreateFeedbackTargetCommand command) {
         log.info("Processing feedback target create command for target type id - {} ", command.getTargetType());
-        modelValidator.validate(command);
+        ModelValidator.validate(command);
         return feedbackTargetCommandHandler.handle(command);
     }
 

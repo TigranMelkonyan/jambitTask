@@ -11,12 +11,16 @@ import java.util.UUID;
  * Time: 12:26 PM
  */
 public interface FeedbackRepository {
+    
+    Feedback findById(UUID id);
 
     Feedback getByUserId(UUID userId);
 
     Feedback save(Feedback feedback);
 
     void deleteByUserId(UUID userId);
+    
+    boolean existsByUserId(UUID userId);
 
-    PageModel<Feedback> getAllByTargetId(final UUID targetId, final int page, final int size);
+    PageModel<Feedback> getAllByFeedbackTargetId(final UUID targetId, final int page, final int size);
 }

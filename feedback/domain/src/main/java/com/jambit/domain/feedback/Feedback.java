@@ -31,7 +31,7 @@ public class Feedback extends AuditableBaseEntity {
     @Column(nullable = false)
     private short score;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private UUID userId;
 
     @Override
