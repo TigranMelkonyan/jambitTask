@@ -1,4 +1,4 @@
-package com.jambit.infrastructure.config;
+package com.jambit.infrastructure.config.persistence;
 
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Configuration;
