@@ -19,6 +19,7 @@ import javax.persistence.Enumerated;
 @Setter
 public class FeedbackTarget extends AuditableBaseEntity {
     
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private TargetType targetType;
 
