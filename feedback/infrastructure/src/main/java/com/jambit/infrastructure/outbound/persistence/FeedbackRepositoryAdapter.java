@@ -1,10 +1,10 @@
-package com.jambit.infrastructure.persistence;
+package com.jambit.infrastructure.outbound.persistence;
 
 import com.jambit.domain.common.exception.RecordNotFoundException;
 import com.jambit.domain.common.page.PageModel;
 import com.jambit.domain.feedback.Feedback;
 import com.jambit.domain.repository.feedback.FeedbackRepository;
-import com.jambit.domain.repository.feedback.PersistenceErrorProcessor;
+import com.jambit.infrastructure.outbound.persistence.validation.PersistenceErrorProcessor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -29,15 +30,27 @@ public class FeedbackRepositoryAdapter extends PersistenceErrorProcessor impleme
     @Override
     @Transactional(readOnly = true)
     public Feedback findById(final UUID id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new RecordNotFoundException(("Feedback not exists with  id: " + id)));
+        Feedback feedback = null;
+        try {
+            feedback = repository.findById(id)
+                    .orElseThrow(() -> new RecordNotFoundException(("Feedback not exists with  id: " + id)));
+
+        } catch (Exception e) {
+            handlePersistenceException("Retrieving record", e);
+        }
+        return feedback;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Feedback getByUserId(final UUID userId) {
-        return repository.findByUserId(userId)
-                .orElseThrow(() -> new RecordNotFoundException(("Feedback not exists with user id: " + userId)));
+    public List<Feedback> getByUserId(final UUID userId) {
+        List<Feedback> feedbacks = null;
+        try {
+            feedbacks = repository.findByUserId(userId);
+        } catch (Exception e) {
+            handlePersistenceException("Retrieving record", e);
+        }
+        return feedbacks;
     }
 
     @Override
@@ -64,8 +77,14 @@ public class FeedbackRepositoryAdapter extends PersistenceErrorProcessor impleme
 
     @Override
     @Transactional(readOnly = true)
-    public boolean existsByUserId(final UUID userId) {
-        return repository.existsByUserId(userId);
+    public boolean existsByUserIdAndTargetId(final UUID userId, UUID targetId) {
+        boolean exists = false;
+        try {
+            exists = repository.existsByUserIdAndFeedbackTargetId(userId, targetId);
+        } catch (Exception e) {
+            handlePersistenceException("Checking record existence", e);
+        }
+        return exists;
     }
 
     @Override

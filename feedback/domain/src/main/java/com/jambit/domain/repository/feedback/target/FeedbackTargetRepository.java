@@ -18,5 +18,7 @@ public interface FeedbackTargetRepository {
 
     FeedbackTarget save(final FeedbackTarget feedbackTarget);
     
+    void delete(final UUID id);
+    
     PageModel<FeedbackTarget> getAll(final int page, final int size);
 }

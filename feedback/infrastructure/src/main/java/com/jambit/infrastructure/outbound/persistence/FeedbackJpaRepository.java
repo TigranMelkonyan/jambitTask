@@ -1,4 +1,4 @@
-package com.jambit.infrastructure.persistence;
+package com.jambit.infrastructure.outbound.persistence;
 
 import com.jambit.domain.feedback.Feedback;
 import org.springframework.data.domain.Page;
@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.Optional;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -17,11 +17,11 @@ import java.util.UUID;
  */
 public interface FeedbackJpaRepository extends JpaRepository<Feedback, UUID> {
 
-    Optional<Feedback> findByUserId(UUID userId);
+    List<Feedback> findByUserId(UUID userId);
     
     void deleteByUserId(UUID userId);
     
-    boolean existsByUserId(UUID userId);
+    boolean existsByUserIdAndFeedbackTargetId(UUID userId, UUID targetId);
 
     @Query("select f from Feedback f where f.feedbackTarget.id =:targetId and f.status = 'ACTIVE'")
     Page<Feedback> findAllForFeedbackTarget(@Param("targetId") UUID targetId, Pageable pageable);

@@ -1,9 +1,10 @@
-package com.jambit.infrastructure.persistence;
+package com.jambit.infrastructure.outbound.persistence;
 
+import com.jambit.domain.common.base.ModelStatus;
 import com.jambit.domain.common.exception.RecordNotFoundException;
 import com.jambit.domain.common.page.PageModel;
 import com.jambit.domain.feedback.FeedbackTarget;
-import com.jambit.domain.repository.feedback.PersistenceErrorProcessor;
+import com.jambit.infrastructure.outbound.persistence.validation.PersistenceErrorProcessor;
 import com.jambit.domain.repository.feedback.target.FeedbackTargetRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,13 +30,27 @@ public class FeedbackTargetRepositoryAdapter extends PersistenceErrorProcessor i
     @Override
     @Transactional(readOnly = true)
     public FeedbackTarget getById(final UUID id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new RecordNotFoundException(("Feedback target not exists with id: " + id)));
+        FeedbackTarget feedbackTarget = null;
+        try {
+            feedbackTarget = repository.findById(id)
+                    .orElseThrow(() -> new RecordNotFoundException(("Feedback target not exists with id: " + id)));
+        } catch (Exception e) {
+            handlePersistenceException("Retrieving record", e);
+        }
+        return feedbackTarget;
     }
 
     @Override
+    @Transactional
     public boolean existsByName(final String name) {
-        return repository.existsByName(name);
+        boolean exists = false;
+        try {
+            exists = repository.existsByName(name);
+
+        } catch (Exception e) {
+            handlePersistenceException("Checking record existence", e);
+        }
+        return exists;
     }
 
     @Override
@@ -52,6 +67,18 @@ public class FeedbackTargetRepositoryAdapter extends PersistenceErrorProcessor i
 
     @Override
     @Transactional
+    public void delete(final UUID id) {
+        try {
+            FeedbackTarget target = getById(id);
+            target.setStatus(ModelStatus.DELETED);
+            repository.save(target);
+        } catch (Exception e) {
+            handlePersistenceException("Deleting record", e);
+        }
+    }
+
+    @Override
+    @Transactional
     public PageModel<FeedbackTarget> getAll(final int page, final int size) {
         long totalCount = 0;
         Page<FeedbackTarget> feedbackPage = null;
@@ -63,6 +90,5 @@ public class FeedbackTargetRepositoryAdapter extends PersistenceErrorProcessor i
             handlePersistenceException("Get all records", e);
         }
         return new PageModel<>(Objects.requireNonNull(feedbackPage).getContent(), totalCount);
-
     }
 }

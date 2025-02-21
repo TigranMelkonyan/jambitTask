@@ -18,7 +18,13 @@
 
     <properties>
         <java.version>11</java.version>
+        <domain.version>0.0.1-SNAPSHOT</domain.version>
+        <application.version>0.0.1-SNAPSHOT</application.version>
         <postgre.version>42.7.4</postgre.version>
+        <springfox.version>2.9.2</springfox.version>
+        <springfox-ui.version>2.9.2</springfox-ui.version>
+        <mapstruct.version>1.6.2</mapstruct.version>
+        <mapstruct-processor.version>1.6.1</mapstruct-processor.version>
     </properties>
 
     <dependencies>
@@ -30,13 +36,13 @@
         <dependency>
             <groupId>com.jambit.platform.feedback</groupId>
             <artifactId>domain</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>${domain.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.jambit.platform.feedback</groupId>
             <artifactId>application</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>${application.version}</version>
         </dependency>
         
         <dependency>
@@ -80,6 +86,31 @@
             <artifactId>postgresql</artifactId>
             <version>${postgre.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${springfox.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${springfox-ui.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${mapstruct.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>${mapstruct-processor.version}</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -87,6 +118,25 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapstruct.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
             </plugin>
         </plugins>
     </build>
