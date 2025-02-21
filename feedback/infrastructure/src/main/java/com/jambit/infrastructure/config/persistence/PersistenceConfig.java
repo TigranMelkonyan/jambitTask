@@ -12,7 +12,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  */
 @Configuration
 @EnableJpaAuditing
-@EnableJpaRepositories(basePackages = {"com.jambit.infrastructure*"})
+@EnableJpaRepositories(basePackages = {"com.jambit.infrastructure"})
 @EntityScan(basePackages = {"com.jambit.domain"})
 public class PersistenceConfig {
 }
