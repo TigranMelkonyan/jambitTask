@@ -1,5 +1,4 @@
-package com.jambit.application.command;
-
+package com.jambit.infrastructure.inbound.rest.dto.request;
 
 import lombok.Data;
 
@@ -13,16 +12,13 @@ import java.util.UUID;
 /**
  * Created by Tigran Melkonyan
  * Date: 2/20/25
- * Time: 11:18 AM
+ * Time: 8:18 PM
  */
 @Data
-public class CreateFeedbackCommand {
+public class CreateFeedbackRequest {
 
     @NotNull(message = "targetId required")
     private UUID feedbackTargetId;
-
-    @NotNull(message = "userId required")
-    private UUID userId;
 
     @NotBlank(message = "title required")
     @Size(max = 50)
@@ -34,5 +30,4 @@ public class CreateFeedbackCommand {
     @Min(0)
     @Max(10)
     private short score;
-
 }

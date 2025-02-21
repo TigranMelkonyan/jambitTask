@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 /**
  * Created by Tigran Melkonyan
  * Date: 2/20/25
@@ -32,6 +34,12 @@ public class FeedbackTargetCommandHandler {
         FeedbackTarget result = repository.save(feedbackTarget);
         log.info("Successfully created feedback target, result - {}", result);
         return result;
+    }
+
+    public void handle(final UUID id) {
+        log.info("Deleting feedback target with id - {}", id);
+        repository.delete(id);
+        log.info("Successfully deleted feedback target with id - {}", id);
     }
 
 }

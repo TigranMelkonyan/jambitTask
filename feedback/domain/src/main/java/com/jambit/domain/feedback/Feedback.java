@@ -6,7 +6,10 @@ import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import java.util.UUID;
 
 /**
@@ -17,9 +20,11 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"feedbackTarget_id", "userId"})})
 public class Feedback extends AuditableBaseEntity {
 
     @ManyToOne
+    @JoinColumn(name = "feedbackTarget_id", nullable = false)
     private FeedbackTarget feedbackTarget;
 
     @Column(nullable = false, length = 50)

@@ -1,4 +1,4 @@
-package com.jambit.infrastructure.persistence;
+package com.jambit.infrastructure.outbound.persistence;
 
 import com.jambit.domain.feedback.FeedbackTarget;
 import org.springframework.data.domain.Page;

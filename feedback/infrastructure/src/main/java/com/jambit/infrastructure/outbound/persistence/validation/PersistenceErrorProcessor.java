@@ -1,4 +1,4 @@
-package com.jambit.domain.repository.feedback;
+package com.jambit.infrastructure.outbound.persistence.validation;
 
 import com.jambit.domain.common.exception.RecordPersistenceException;
 import org.springframework.dao.DataIntegrityViolationException;

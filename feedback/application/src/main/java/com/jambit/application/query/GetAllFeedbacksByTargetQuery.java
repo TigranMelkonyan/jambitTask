@@ -1,5 +1,6 @@
 package com.jambit.application.query;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.validation.constraints.Min;
@@ -12,6 +13,7 @@ import java.util.UUID;
  * Time: 11:59 AM
  */
 @Data
+@AllArgsConstructor
 public class GetAllFeedbacksByTargetQuery {
 
     @NotNull(message = "targetId required")

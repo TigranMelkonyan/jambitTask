@@ -3,12 +3,13 @@ package com.jambit.application.service;
 import com.jambit.application.command.CreateFeedbackCommand;
 import com.jambit.application.command.handler.FeedbackCommandHandler;
 import com.jambit.application.service.validation.ModelValidator;
+import com.jambit.application.util.NullCheckUtils;
 import com.jambit.domain.feedback.Feedback;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -31,7 +32,7 @@ public class FeedbackCommandService {
 
     public void deleteByUser(final UUID userId) {
         log.info("Processing feedback delete command for user with id - {} ", userId);
-        Assert.notNull(userId, "userId must not be null");
+        NullCheckUtils.checkNullConstraints(List.of("userId"), userId);
         feedbackCommandHandler.handle(userId);
     }
 

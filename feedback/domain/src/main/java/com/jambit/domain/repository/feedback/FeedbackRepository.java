@@ -3,6 +3,7 @@ package com.jambit.domain.repository.feedback;
 import com.jambit.domain.common.page.PageModel;
 import com.jambit.domain.feedback.Feedback;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -14,13 +15,13 @@ public interface FeedbackRepository {
     
     Feedback findById(UUID id);
 
-    Feedback getByUserId(UUID userId);
+    List<Feedback> getByUserId(UUID userId);
 
     Feedback save(Feedback feedback);
 
     void deleteByUserId(UUID userId);
     
-    boolean existsByUserId(UUID userId);
+    boolean existsByUserIdAndTargetId(UUID userId, UUID targetId);
 
     PageModel<Feedback> getAllByFeedbackTargetId(final UUID targetId, final int page, final int size);
 }

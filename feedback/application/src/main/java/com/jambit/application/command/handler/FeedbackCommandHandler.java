@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -25,18 +24,17 @@ import java.util.UUID;
 public class FeedbackCommandHandler {
 
     private final FeedbackRepository feedbackRepository;
-    private final FeedbackMapper mapper;
+    private final FeedbackMapper feedbackMapper;
     private final FeedbackTargetRepository feedbackTargetRepository;
 
     public Feedback handle(final CreateFeedbackCommand command) {
         log.info("Creating feedback with user id - {} ", command.getUserId());
-        if (feedbackRepository.existsByUserId(command.getUserId()) &&
-                Objects.equals(feedbackRepository.getByUserId(command.getUserId()).getFeedbackTarget(), command.getFeedbackTargetId())) {
+        if (feedbackRepository.existsByUserIdAndTargetId(command.getUserId(), command.getFeedbackTargetId())) {
             throw new RecordPersistenceException(String
                     .format("User with id - %s already has feedback for target with id - %s",
                             command.getUserId(), command.getFeedbackTargetId()));
         }
-        Feedback feedback = mapper.createFeedbackCommandToEntity(command);
+        Feedback feedback = feedbackMapper.createFeedbackCommandToEntity(command);
         FeedbackTarget feedbackTarget = feedbackTargetRepository.getById(command.getFeedbackTargetId());
         feedback.setFeedbackTarget(feedbackTarget);
         Feedback result = feedbackRepository.save(feedback);

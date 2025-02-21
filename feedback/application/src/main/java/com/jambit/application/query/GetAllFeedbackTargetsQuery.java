@@ -1,5 +1,6 @@
 package com.jambit.application.query;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.validation.constraints.Min;
@@ -10,6 +11,7 @@ import javax.validation.constraints.Min;
  * Time: 11:59 AM
  */
 @Data
+@AllArgsConstructor
 public class GetAllFeedbackTargetsQuery {
     
     @Min(0)
