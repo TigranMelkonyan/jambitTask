@@ -30,27 +30,14 @@ public class FeedbackRepositoryAdapter extends PersistenceErrorProcessor impleme
     @Override
     @Transactional(readOnly = true)
     public Feedback findById(final UUID id) {
-        Feedback feedback = null;
-        try {
-            feedback = repository.findById(id)
-                    .orElseThrow(() -> new RecordNotFoundException(("Feedback not exists with  id: " + id)));
-
-        } catch (Exception e) {
-            handlePersistenceException("Retrieving record", e);
-        }
-        return feedback;
+        return repository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(("Feedback not exists with  id: " + id)));
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Feedback> getByUserId(final UUID userId) {
-        List<Feedback> feedbacks = null;
-        try {
-            feedbacks = repository.findByUserId(userId);
-        } catch (Exception e) {
-            handlePersistenceException("Retrieving record", e);
-        }
-        return feedbacks;
+        return repository.findByUserId(userId);
     }
 
     @Override
@@ -78,27 +65,17 @@ public class FeedbackRepositoryAdapter extends PersistenceErrorProcessor impleme
     @Override
     @Transactional(readOnly = true)
     public boolean existsByUserIdAndTargetId(final UUID userId, UUID targetId) {
-        boolean exists = false;
-        try {
-            exists = repository.existsByUserIdAndFeedbackTargetId(userId, targetId);
-        } catch (Exception e) {
-            handlePersistenceException("Checking record existence", e);
-        }
-        return exists;
+        return repository.existsByUserIdAndFeedbackTargetId(userId, targetId);
     }
 
     @Override
     @Transactional(readOnly = true)
     public PageModel<Feedback> getAllByFeedbackTargetId(final UUID targetId, final int page, final int size) {
-        long totalCount = 0;
-        Page<Feedback> feedbackPage = null;
-        try {
-            Pageable pageable = PageRequest.of(page, size);
-            feedbackPage = repository.findAllForFeedbackTarget(targetId, pageable);
-            totalCount = feedbackPage.getTotalElements();
-        } catch (Exception e) {
-            handlePersistenceException("Get all records for target id" + targetId, e);
-        }
+        long totalCount;
+        Page<Feedback> feedbackPage;
+        Pageable pageable = PageRequest.of(page, size);
+        feedbackPage = repository.findAllForFeedbackTarget(targetId, pageable);
+        totalCount = feedbackPage.getTotalElements();
         return new PageModel<>(Objects.requireNonNull(feedbackPage).getContent(), totalCount);
     }
 
