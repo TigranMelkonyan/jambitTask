@@ -17,21 +17,44 @@
 * [Spring Data JPA Documentation](https://docs.spring.io/spring-data/jpa/reference/)
 * [PostgreSQL Documentation](https://www.postgresql.org/docs/)
 * [Maven Documentation](https://maven.apache.org/guides/index.html)
+* [Docker Reference Guide](https://docs.docker.com)
 
 ### Default IAM users
 
+    Admin
     password: Jambit123@
     userName: jambittestuser1
   
+    User
     password: Jambit321@
     userName: jambittestuser2
   
+    User
     password: Jambit213@
     userName: jambittestuser3
 
+
+### Application build/run description
+
+1. Go to the project base directory f.e cd {base-dir}/jambitTask
+2. Make: mvn clean install (it will run default dev profile)
+3. Set the environment variables for production:
+
+       export DB_URL=jdbc:postgresql://common-db:5432/jambit_db
+       export DB_USERNAME=<db_username>
+       export DB_PASSWORD=<db_password>
+       export FLYWAY_USERNAME=<flyway_username>
+       export FLYWAY_PASSWORD=<flyway_password>
+       export JWT_SECRET_KEY=<jwt_secret>
+
+4. Make: sudo -E docker-compose -f local_stack/docker-compose.yml up --build
+5. After running application you can retrieve jwt token by default iam users credentials
+   mentioned above and use feedback APIs.
+
+
 ### OAUTH API Description
 
-* [swagger url](http://localhost:8081/swagger-ui.html) 
+* [swagger url](http://localhost:8081/swagger-ui.html)
 
 
 * [retrieve jwt access token]
@@ -43,4 +66,65 @@
           "password": {password},
           "userName": {userName}
       }'
+
+### Feedback API Description
+
+* [swagger url](http://localhost:8080/swagger-ui.html)
+
+* [feedback-target-command-controller]
+
+      curl -X POST "http://localhost:8080/api/feedback_targets/command" \
+          -H "Accept: */*" \
+          -H "Authorization: Bearer {token} \
+          -H "Content-Type: application/json" \
+          -d '{
+          "name": {name},
+          "targetType": {targetType}
+      }'
+
+      curl -X DELETE "http://localhost:8080/api/feedback_targets/command/{id}" \
+          -H "Accept: */*" \
+          -H "Authorization: Bearer {token}"
+
+* [feedback-target-query-controller]
+
+      curl -X GET "http://localhost:8080/api/feedback_targets/query/{id}" \
+          -H "Accept: */*" \
+          -H "Authorization: Bearer {token}"
+
+      curl -X GET "http://localhost:8080/api/feedback_targets/query/pages?pageNumber={pageNumber}&pageSize={pageSize}" \
+           -H "Accept: */*" \
+           -H "Authorization: Bearer {token}"
+
+
+* [feedback-command-controller]
+
+      curl -X POST "http://localhost:8080/api/feedbacks/command" \
+           -H "Accept: */*" \
+           -H "Authorization: Bearer {token}" \
+           -H "Content-Type: application/json" \
+           -d '{
+              "comment": {comment},
+              "feedbackTargetId": {feedbackTargetId},
+              "score": {score},
+              "title": {title}
+          }'
+
+      curl -X DELETE "http://localhost:8080/api/feedbacks/command/{id}" \
+          -H "Accept: */*" \
+          -H "Authorization: Bearer {token}"
+
+* [feedback-query-controller]
+
+      curl -X GET "http://localhost:8080/api/feedbacks/query/{id}" \
+           -H "Accept: */*" \
+           -H "Authorization: Bearer {token}"
+
+      curl -X GET "http://localhost:8080/api/feedbacks/query/{id}/by_user" \
+           -H "Accept: */*" \
+           -H "Authorization: Bearer {token}"
+
+      curl -X GET "http://localhost:8080/api/feedbacks/query/{target_id}/pages?pageNumber=0&pageSize=10" \
+           -H "Accept: */*" \
+           -H "Authorization: Bearer {token}"
 
