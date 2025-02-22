@@ -16,6 +16,7 @@ public class FeedbackResponse {
     private String title;
     private String comment;
     private short score;
+    private UUID feedbackTargetId;
     
     //Should be replaced with user response data 
     private UUID userId;
