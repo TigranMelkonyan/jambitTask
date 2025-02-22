@@ -1,6 +1,7 @@
 package com.jambit.domain.common.page;
 
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
  * Time: 12:27 AM
  */
 @Getter
+@ToString
 public class PageModel<T> {
 
     private final List<T> items = new ArrayList<>();
