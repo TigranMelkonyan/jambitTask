@@ -1,4 +1,4 @@
-package com.jambit.infrastructure.inbound.rest.dto.response;
+package com.jambit.infrastructure.inbound.rest.model.response;
 
 import lombok.Getter;
 

@@ -1,4 +1,4 @@
-package com.jambit.infrastructure.inbound.rest.dto.request;
+package com.jambit.infrastructure.inbound.rest.model.request;
 
 import com.jambit.domain.feedback.TargetType;
 import lombok.Data;

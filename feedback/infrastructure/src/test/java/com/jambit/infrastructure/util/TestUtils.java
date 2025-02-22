@@ -6,10 +6,10 @@ import com.jambit.domain.common.base.ModelStatus;
 import com.jambit.domain.feedback.Feedback;
 import com.jambit.domain.feedback.FeedbackTarget;
 import com.jambit.domain.feedback.TargetType;
-import com.jambit.infrastructure.inbound.rest.dto.request.CreateFeedbackRequest;
-import com.jambit.infrastructure.inbound.rest.dto.request.CreateFeedbackTargetRequest;
-import com.jambit.infrastructure.inbound.rest.dto.response.FeedbackResponse;
-import com.jambit.infrastructure.inbound.rest.dto.response.FeedbackTargetResponse;
+import com.jambit.infrastructure.inbound.rest.model.request.CreateFeedbackRequest;
+import com.jambit.infrastructure.inbound.rest.model.request.CreateFeedbackTargetRequest;
+import com.jambit.infrastructure.inbound.rest.model.response.FeedbackResponse;
+import com.jambit.infrastructure.inbound.rest.model.response.FeedbackTargetResponse;
 
 import java.util.UUID;
 

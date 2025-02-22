@@ -5,7 +5,7 @@ import com.jambit.application.service.FeedbackTargetQueryService;
 import com.jambit.domain.common.page.PageModel;
 import com.jambit.domain.feedback.FeedbackTarget;
 import com.jambit.infrastructure.inbound.rest.controller.feedback.FeedbackTargetQueryController;
-import com.jambit.infrastructure.inbound.rest.dto.response.FeedbackTargetResponse;
+import com.jambit.infrastructure.inbound.rest.model.response.FeedbackTargetResponse;
 import com.jambit.infrastructure.inbound.rest.mapper.FeedbackTargetResponseMapper;
 import com.jambit.infrastructure.util.TestUtils;
 import org.junit.jupiter.api.BeforeEach;

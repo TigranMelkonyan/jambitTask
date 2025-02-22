@@ -2,7 +2,7 @@ package com.jambit.infrastructure.inbound.rest.controller;
 
 import com.jambit.domain.common.exception.ErrorCode;
 import com.jambit.domain.common.exception.RecordConflictException;
-import com.jambit.infrastructure.inbound.rest.dto.response.ErrorResponse;
+import com.jambit.infrastructure.inbound.rest.model.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.introspection.OAuth2IntrospectionException;
