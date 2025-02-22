@@ -1,7 +1,7 @@
 package com.jambit.infrastructure.inbound.rest.mapper;
 
 import com.jambit.domain.feedback.FeedbackTarget;
-import com.jambit.infrastructure.inbound.rest.dto.response.FeedbackTargetResponse;
+import com.jambit.infrastructure.inbound.rest.model.response.FeedbackTargetResponse;
 import org.mapstruct.Mapper;
 
 /**

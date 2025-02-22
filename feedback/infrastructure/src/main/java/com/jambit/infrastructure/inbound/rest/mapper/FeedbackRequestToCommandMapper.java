@@ -1,7 +1,7 @@
 package com.jambit.infrastructure.inbound.rest.mapper;
 
 import com.jambit.application.command.CreateFeedbackCommand;
-import com.jambit.infrastructure.inbound.rest.dto.request.CreateFeedbackRequest;
+import com.jambit.infrastructure.inbound.rest.model.request.CreateFeedbackRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

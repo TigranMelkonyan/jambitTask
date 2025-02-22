@@ -6,7 +6,7 @@ import com.jambit.domain.common.page.PageModel;
 import com.jambit.domain.feedback.Feedback;
 import com.jambit.domain.feedback.FeedbackTarget;
 import com.jambit.infrastructure.inbound.rest.controller.feedback.FeedbackQueryController;
-import com.jambit.infrastructure.inbound.rest.dto.response.FeedbackResponse;
+import com.jambit.infrastructure.inbound.rest.model.response.FeedbackResponse;
 import com.jambit.infrastructure.inbound.rest.mapper.FeedbackResponseMapper;
 import com.jambit.infrastructure.util.TestUtils;
 import org.junit.jupiter.api.BeforeEach;
