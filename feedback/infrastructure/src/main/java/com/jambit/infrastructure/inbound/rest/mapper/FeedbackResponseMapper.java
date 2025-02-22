@@ -3,6 +3,7 @@ package com.jambit.infrastructure.inbound.rest.mapper;
 import com.jambit.domain.feedback.Feedback;
 import com.jambit.infrastructure.inbound.rest.dto.response.FeedbackResponse;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 /**
  * Created by Tigran Melkonyan
@@ -12,6 +13,7 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface FeedbackResponseMapper {
 
+    @Mapping(source = "feedbackTarget.id", target = "feedbackTargetId")
     FeedbackResponse feedbackToResponse(Feedback feedback);
 
 }

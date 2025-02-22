@@ -42,10 +42,10 @@ public class FeedbackCommandHandler {
         return result;
     }
 
-    public void handle(final UUID userId) {
-        log.info("Deleting feedback with user id - {} ", userId);
-        feedbackRepository.deleteByUserId(userId);
-        log.info("Successfully deleted feedback with user id - {}", userId);
+    public void handle(final UUID id) {
+        log.info("Deleting feedback with id - {} ", id);
+        feedbackRepository.deleteById(id);
+        log.info("Successfully deleted feedback with id - {}", id);
     }
 
 }

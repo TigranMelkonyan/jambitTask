@@ -93,7 +93,7 @@ public class FeedbackCommandControllerIT {
     @Test
     @WithMockUser(roles = {"ADMIN"})
     void deleteFeedback_ShouldReturnNoContent() throws Exception {
-        Mockito.doNothing().when(feedbackCommandService).deleteByUser(userId);
+        Mockito.doNothing().when(feedbackCommandService).deleteById(userId);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .delete("/api/feedbacks/command/{userId}", userId)

@@ -112,6 +112,6 @@ class FeedbackCommandControllerTest {
         mockMvc.perform(delete("/api/feedbacks/command/{userId}", userId))
                 .andExpect(status().isNoContent());
 
-        Mockito.verify(feedbackCommandService).deleteByUser(userId);
+        Mockito.verify(feedbackCommandService).deleteById(userId);
     }
 }

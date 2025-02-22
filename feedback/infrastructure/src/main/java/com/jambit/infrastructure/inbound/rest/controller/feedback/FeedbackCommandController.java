@@ -50,11 +50,11 @@ public class FeedbackCommandController extends AbstractController {
         return respondOK(feedbackResponseMapper.feedbackToResponse(feedback));
     }
 
-    @DeleteMapping("{userId}")
+    @DeleteMapping("{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<?> delete(@PathVariable final UUID userId) {
-        NullCheckUtils.checkNullConstraints(List.of("userId"), userId);
-        feedbackCommandService.deleteByUser(userId);
+    public ResponseEntity<?> delete(@PathVariable final UUID id) {
+        NullCheckUtils.checkNullConstraints(List.of("id"), id);
+        feedbackCommandService.deleteById(id);
         return respondEmpty();
     }
 }

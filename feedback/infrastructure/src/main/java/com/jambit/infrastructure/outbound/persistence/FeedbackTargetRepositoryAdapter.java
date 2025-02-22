@@ -30,7 +30,7 @@ public class FeedbackTargetRepositoryAdapter extends PersistenceErrorProcessor i
     @Override
     @Transactional(readOnly = true)
     public FeedbackTarget getById(final UUID id) {
-        return repository.findById(id)
+        return repository.findByIdAndAuditStatus(id)
                 .orElseThrow(() -> new RecordNotFoundException(("Feedback target not exists with id: " + id)));
     }
 

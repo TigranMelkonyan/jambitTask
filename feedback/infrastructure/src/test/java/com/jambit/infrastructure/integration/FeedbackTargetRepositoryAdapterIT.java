@@ -45,7 +45,6 @@ class FeedbackTargetRepositoryAdapterIT {
         feedbackTargetId = feedbackTarget.getId();
     }
 
-
     @Test
     void shouldGetById() {
         FeedbackTarget found = feedbackTargetRepositoryAdapter.getById(feedbackTargetId);
@@ -94,10 +93,8 @@ class FeedbackTargetRepositoryAdapterIT {
     void shouldDeleteFeedbackTarget() {
         feedbackTargetRepositoryAdapter.delete(feedbackTargetId);
 
-        FeedbackTarget deletedTarget = feedbackTargetRepositoryAdapter.getById(feedbackTargetId);
-
-        assertNotNull(deletedTarget);
-        assertEquals(ModelStatus.DELETED, deletedTarget.getStatus());
+        assertThrows(RecordNotFoundException.class, 
+                () -> feedbackTargetRepositoryAdapter.getById(feedbackTargetId));
     }
 
     @Test
