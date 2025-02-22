@@ -1,0 +1,74 @@
+version: "3.7"
+
+services:
+  common-db:
+    image: postgres:16
+    container_name: db
+    restart: always
+    networks:
+      - db_network
+    environment:
+      - POSTGRES_USER=tiko
+      - POSTGRES_PASSWORD=tiko123!
+      - POSTGRES_DB=jambit_db
+    ports:
+      - 5433:5432
+    volumes:
+      - db_network:/var/lib/postgresql/data
+  
+  jambit-feedback-app:
+    build:
+      dockerfile: feedback/infrastructure/Dockerfile
+      context: ../
+    container_name: jambit-feedback-app
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - db_network
+    environment:
+      - JAVA_OPTS=-Xmx512m -Xms512m
+      - SPRING_DATASOURCE_URL=${DB_URL}
+      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - SPRING_FLYWAY_USER=${FLYWAY_USERNAME}
+      - SPRING_FLYWAY_PASSWORD=${FLYWAY_PASSWORD}
+      - SPRING_FLYWAY_SCHEMAS=jambit_feedbacks
+      - SPRING_FLYWAY_BASELINE_ON_MIGRATE=true
+      - SPRING_FLYWAY_LOCATIONS=classpath:db/migration
+      - SPRING_PROFILES_ACTIVE=prod
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+  
+  jambit-iam-app:
+    build:
+      dockerfile: iam/Dockerfile
+      context: ../
+    container_name: jambit-iam-app
+    restart: always
+    ports:
+      - 8081:8081
+    networks:
+      - db_network
+    environment:
+      - JAVA_OPTS=-Xmx512m -Xms512m
+      - SPRING_DATASOURCE_URL=${DB_URL}
+      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - SPRING_FLYWAY_USER=${FLYWAY_USERNAME}
+      - SPRING_FLYWAY_PASSWORD=${FLYWAY_PASSWORD}
+      - SPRING_FLYWAY_SCHEMAS=jambit_iam
+      - SPRING_FLYWAY_BASELINE_ON_MIGRATE=true
+      - SPRING_FLYWAY_LOCATIONS=classpath:db/migration
+      - SPRING_PROFILES_ACTIVE=prod
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+
+networks:
+  db_network:
+    driver: bridge
+    name: db_network
+
+volumes:
+  postgres_data:
+    external: false
+  db_network:
+    name: db_network
