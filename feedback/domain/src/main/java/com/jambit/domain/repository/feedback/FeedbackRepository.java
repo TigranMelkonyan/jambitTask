@@ -19,7 +19,7 @@ public interface FeedbackRepository {
 
     Feedback save(Feedback feedback);
 
-    void deleteByUserId(UUID userId);
+    void deleteById(UUID id);
     
     boolean existsByUserIdAndTargetId(UUID userId, UUID targetId);
 

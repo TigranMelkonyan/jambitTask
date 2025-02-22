@@ -97,10 +97,10 @@ class FeedbackJpaRepositoryTest {
     }
 
     @Test
-    void shouldDeleteFeedbackByUserId() {
-        feedbackJpaRepository.deleteByUserId(userId);
+    void shouldDeleteFeedbackById() {
+        feedbackJpaRepository.deleteById(feedbackId);
 
-        List<Feedback> feedbacks = feedbackJpaRepository.findByUserId(userId);
+        Optional<Feedback> feedbacks = feedbackJpaRepository.findById(feedbackId);
         assertTrue(feedbacks.isEmpty());
     }
 

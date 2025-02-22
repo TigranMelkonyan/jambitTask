@@ -97,7 +97,7 @@ class FeedbackRepositoryAdapterIT {
         newFeedback.setUserId(UUID.randomUUID());
         newFeedback.setFeedbackTarget(feedbackTarget);
 
-        feedbackRepositoryAdapter.deleteByUserId(userId);
+        feedbackRepositoryAdapter.deleteById(feedbackId);
 
         assertTrue(feedbackRepositoryAdapter.getByUserId(userId).isEmpty());
     }

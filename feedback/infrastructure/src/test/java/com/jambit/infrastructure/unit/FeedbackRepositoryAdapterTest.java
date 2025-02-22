@@ -97,11 +97,11 @@ class FeedbackRepositoryAdapterTest {
 
     @Test
     void deleteByUserId_ShouldDeleteFeedback() {
-        doNothing().when(feedbackJpaRepository).deleteByUserId(feedback.getUserId());
+        doNothing().when(feedbackJpaRepository).deleteById(feedback.getUserId());
 
-        feedbackRepositoryAdapter.deleteByUserId(feedback.getUserId());
+        feedbackRepositoryAdapter.deleteById(feedback.getUserId());
 
-        verify(feedbackJpaRepository).deleteByUserId(feedback.getUserId());
+        verify(feedbackJpaRepository).deleteById(feedback.getUserId());
     }
 
     @Test

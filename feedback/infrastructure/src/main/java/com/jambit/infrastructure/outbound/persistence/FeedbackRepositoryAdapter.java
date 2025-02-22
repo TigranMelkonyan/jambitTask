@@ -54,9 +54,9 @@ public class FeedbackRepositoryAdapter extends PersistenceErrorProcessor impleme
 
     @Override
     @Transactional
-    public void deleteByUserId(final UUID userId) {
+    public void deleteById(final UUID id) {
         try {
-            repository.deleteByUserId(userId);
+            repository.deleteById(id);
         } catch (Exception e) {
             handlePersistenceException("Delete record", e);
         }

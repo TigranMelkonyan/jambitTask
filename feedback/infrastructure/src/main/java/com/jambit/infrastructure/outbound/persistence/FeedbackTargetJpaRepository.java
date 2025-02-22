@@ -5,7 +5,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -18,5 +20,8 @@ public interface FeedbackTargetJpaRepository extends JpaRepository<FeedbackTarge
     @Query("select f from FeedbackTarget f where f.status = 'ACTIVE'")
     Page<FeedbackTarget> findAllFeedbackTargets(Pageable pageable);
 
+    @Query("select f from FeedbackTarget f where f.id=:id and f.status = 'ACTIVE'")
+    Optional<FeedbackTarget> findByIdAndAuditStatus(@Param("id") UUID id);
+    
     boolean existsByName(String name);
 }

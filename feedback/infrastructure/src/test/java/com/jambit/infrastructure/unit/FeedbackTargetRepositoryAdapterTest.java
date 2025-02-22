@@ -6,6 +6,7 @@ import com.jambit.domain.common.page.PageModel;
 import com.jambit.domain.feedback.FeedbackTarget;
 import com.jambit.infrastructure.outbound.persistence.FeedbackTargetJpaRepository;
 import com.jambit.infrastructure.outbound.persistence.FeedbackTargetRepositoryAdapter;
+import com.jambit.infrastructure.util.TestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -48,30 +49,34 @@ class FeedbackTargetRepositoryAdapterTest {
 
     @BeforeEach
     void setUp() {
-        feedbackTargetId = UUID.randomUUID();
-        feedbackTarget = new FeedbackTarget();
-        feedbackTarget.setId(feedbackTargetId);
-        feedbackTarget.setName("TestFeedbackTarget");
+        feedbackTarget = TestUtils.createFeedbackTarget();
+        feedbackTargetId = feedbackTarget.getId();
     }
 
     @Test
     void getById_ShouldReturnFeedbackTarget_WhenExists() {
-        when(repository.findById(feedbackTargetId)).thenReturn(Optional.of(feedbackTarget));
+        FeedbackTarget mockTarget = TestUtils.createFeedbackTarget();
+        UUID targetId = mockTarget.getId();
 
-        FeedbackTarget result = adapter.getById(feedbackTargetId);
+        when(repository.findByIdAndAuditStatus(targetId))
+                .thenReturn(Optional.of(mockTarget));
+
+        FeedbackTarget result = adapter.getById(targetId);
 
         assertNotNull(result);
-        assertEquals(feedbackTargetId, result.getId());
-        verify(repository).findById(feedbackTargetId);
+        assertEquals(targetId, result.getId());
+        verify(repository).findByIdAndAuditStatus(targetId);
     }
 
     @Test
     void getById_ShouldThrowRecordNotFoundException_WhenNotExists() {
-        when(repository.findById(feedbackTargetId)).thenReturn(Optional.empty());
+        when(repository.findByIdAndAuditStatus(feedbackTargetId)).thenReturn(Optional.empty());
 
         assertThrows(RecordNotFoundException.class, () -> adapter.getById(feedbackTargetId));
-        verify(repository).findById(feedbackTargetId);
+
+        verify(repository).findByIdAndAuditStatus(feedbackTargetId);
     }
+
 
     @Test
     void existsByName_ShouldReturnTrue_WhenExists() {
@@ -108,13 +113,16 @@ class FeedbackTargetRepositoryAdapterTest {
 
     @Test
     void delete_ShouldMarkAsDeleted_WhenFeedbackTargetExists() {
-        when(repository.findById(feedbackTargetId)).thenReturn(Optional.of(feedbackTarget));
+        when(repository.findByIdAndAuditStatus(feedbackTargetId))
+                .thenReturn(Optional.of(feedbackTarget));
+
         when(repository.save(any(FeedbackTarget.class))).thenReturn(feedbackTarget);
 
         adapter.delete(feedbackTargetId);
 
         assertEquals(ModelStatus.DELETED, feedbackTarget.getStatus());
-        verify(repository).findById(feedbackTargetId);
+
+        verify(repository).findByIdAndAuditStatus(feedbackTargetId);
         verify(repository).save(feedbackTarget);
     }
 

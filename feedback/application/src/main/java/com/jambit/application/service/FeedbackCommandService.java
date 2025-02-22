@@ -30,10 +30,10 @@ public class FeedbackCommandService {
         return feedbackCommandHandler.handle(command);
     }
 
-    public void deleteByUser(final UUID userId) {
-        log.info("Processing feedback delete command for user with id - {} ", userId);
-        NullCheckUtils.checkNullConstraints(List.of("userId"), userId);
-        feedbackCommandHandler.handle(userId);
+    public void deleteById(final UUID id) {
+        log.info("Processing feedback delete command with id - {} ", id);
+        NullCheckUtils.checkNullConstraints(List.of("id"), id);
+        feedbackCommandHandler.handle(id);
     }
 
 }

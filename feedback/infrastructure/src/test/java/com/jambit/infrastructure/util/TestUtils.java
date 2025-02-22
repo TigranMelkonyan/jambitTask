@@ -2,6 +2,7 @@ package com.jambit.infrastructure.util;
 
 import com.jambit.application.command.CreateFeedbackCommand;
 import com.jambit.application.command.CreateFeedbackTargetCommand;
+import com.jambit.domain.common.base.ModelStatus;
 import com.jambit.domain.feedback.Feedback;
 import com.jambit.domain.feedback.FeedbackTarget;
 import com.jambit.domain.feedback.TargetType;
@@ -36,6 +37,7 @@ public final class TestUtils {
         FeedbackTarget feedbackTarget = new FeedbackTarget();
         feedbackTarget.setId(UUID.randomUUID());
         feedbackTarget.setName("Feedback Target");
+        feedbackTarget.setStatus(ModelStatus.ACTIVE);
         feedbackTarget.setTargetType(TargetType.RESTAURANT);
         return feedbackTarget;
     }

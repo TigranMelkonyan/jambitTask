@@ -19,8 +19,6 @@ public interface FeedbackJpaRepository extends JpaRepository<Feedback, UUID> {
 
     List<Feedback> findByUserId(UUID userId);
     
-    void deleteByUserId(UUID userId);
-    
     boolean existsByUserIdAndFeedbackTargetId(UUID userId, UUID targetId);
 
     @Query("select f from Feedback f where f.feedbackTarget.id =:targetId and f.status = 'ACTIVE'")
