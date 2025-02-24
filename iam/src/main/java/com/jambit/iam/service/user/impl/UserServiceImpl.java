@@ -12,11 +12,12 @@ import com.jambit.iam.domain.model.user.UpdateUserModel;
 import com.jambit.iam.repository.user.UserRepository;
 import com.jambit.iam.service.user.UserService;
 import com.jambit.iam.service.validator.ModelValidator;
+import com.jambit.iam.util.NullCheckUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -59,7 +60,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public User getById(final UUID id) {
         log.info("Retrieving user with id - {} ", id);
-        Assert.notNull(id, "id must not be null");
+        NullCheckUtils.checkNullConstraints(List.of("id"), id);
         User result = repository.findById(id).orElseThrow(() -> new RecordConflictException(
                 String.format("User with id - %s not exists", id),
                 ErrorCode.NOT_EXISTS_EXCEPTION));
@@ -71,7 +72,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public User getByUserName(final String userName) {
         log.info("Retrieving user with user name - {} ", userName);
-        Assert.notNull(userName, "userName must not be null");
+        NullCheckUtils.checkNullConstraints(List.of("userName"), userName);
         User result = repository.findByUsername(userName)
                 .orElseThrow(() -> new RecordConflictException(
                         String.format("User with name - %s not exists", userName),
@@ -84,7 +85,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User update(final UUID id, final UpdateUserModel model) {
         log.info("Updating user with id - {} ", id);
-        Assert.notNull(id, "id must not be null");
+        NullCheckUtils.checkNullConstraints(List.of("id"), id);
         validator.validate(model);
         User user = getById(id);
         if (!user.getUsername().equals(model.getUsername())) {
@@ -103,7 +104,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void delete(final UUID id, final boolean deleteFromDb) {
         log.info("Deleting user with id - {} ", id);
-        Assert.notNull(id, "id must not be null");
+        NullCheckUtils.checkNullConstraints(List.of("id"), id);
         User user = getById(id);
         if (deleteFromDb) {
             repository.delete(user);
@@ -120,7 +121,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void inactivateUser(final UUID id) {
         log.info("Inactivating user with id - {} ", id);
-        Assert.notNull(id, "id must not be null");
+        NullCheckUtils.checkNullConstraints(List.of("id"), id);
         User user = getById(id);
         user.setActive(false);
         User result = repository.save(user);
