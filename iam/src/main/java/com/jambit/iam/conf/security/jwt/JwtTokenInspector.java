@@ -34,19 +34,9 @@ public class JwtTokenInspector implements OpaqueTokenIntrospector {
         try {
             Jwt jwt = jwtDecoder.decode(token);
             checkJwtClaims(jwt);
-
             List<GrantedAuthority> authorities = new ArrayList<>();
-
-            if (jwt.getClaim("authorities") != null) {
-                String role = jwt.getClaim("authorities");
-                authorities.add(new SimpleGrantedAuthority(role));
-            }
-            if (jwt.getClaim("authorities") != null) {
-                List<String> roles = jwt.getClaim("authorities");
-                for (String role : roles) {
-                    authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
-                }
-            }
+            Object authoritiesClaim = jwt.getClaim("authorities");
+            authorities.add(new SimpleGrantedAuthority(authoritiesClaim.toString()));
             return new DefaultOAuth2AuthenticatedPrincipal(
                     jwt.getSubject(),
                     jwt.getClaims(),
@@ -61,7 +51,8 @@ public class JwtTokenInspector implements OpaqueTokenIntrospector {
         List<String> requiredClaims = Arrays.asList(
                 JwtClaim.UID.getValue(),
                 JwtClaim.SUB.getValue(),
-                JwtClaim.EXPIRATION.getValue()
+                JwtClaim.EXPIRATION.getValue(),
+                JwtClaim.AUTHORITIES.getValue()
         );
         if (!jwt.getClaims().keySet().containsAll(requiredClaims)) {
             throw new OAuth2IntrospectionException("JWT token doesn't contain all required claims");

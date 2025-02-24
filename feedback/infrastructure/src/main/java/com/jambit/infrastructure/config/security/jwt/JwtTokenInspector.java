@@ -36,16 +36,7 @@ public class JwtTokenInspector implements OpaqueTokenIntrospector {
             checkJwtClaims(jwt);
             List<GrantedAuthority> authorities = new ArrayList<>();
             Object authoritiesClaim = jwt.getClaim("authorities");
-            if (authoritiesClaim instanceof String) {
-                authorities.add(new SimpleGrantedAuthority("ROLE_" + authoritiesClaim));
-            } else if (authoritiesClaim instanceof List) {
-                List<?> roles = (List<?>) authoritiesClaim;
-                for (Object role : roles) {
-                    if (role instanceof String) {
-                        authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
-                    }
-                }
-            }
+            authorities.add(new SimpleGrantedAuthority(authoritiesClaim.toString()));
             return new DefaultOAuth2AuthenticatedPrincipal(
                     jwt.getSubject(),
                     jwt.getClaims(),
