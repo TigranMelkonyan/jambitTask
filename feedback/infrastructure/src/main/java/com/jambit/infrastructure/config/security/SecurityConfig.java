@@ -3,6 +3,7 @@ package com.jambit.infrastructure.config.security;
 import com.jambit.infrastructure.config.security.jwt.JwtTokenInspector;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -19,6 +20,7 @@ import javax.crypto.spec.SecretKeySpec;
  * Time: 6:28 PM
  */
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String JWT_ALGORITHM = "HmacSHA256";

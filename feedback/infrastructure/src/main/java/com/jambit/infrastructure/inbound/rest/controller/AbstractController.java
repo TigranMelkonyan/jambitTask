@@ -4,7 +4,6 @@ import com.jambit.domain.common.exception.ErrorCode;
 import com.jambit.domain.common.exception.RecordConflictException;
 import com.jambit.infrastructure.inbound.rest.model.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.introspection.OAuth2IntrospectionException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -74,16 +73,5 @@ public abstract class AbstractController {
                 });
         return errors;
     }
-
-    protected <T> ResponseEntity<T> respondOK(final T object) {
-        return respond(object);
-    }
-
-    protected <T> ResponseEntity<T> respondEmpty() {
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    private <T> ResponseEntity<T> respond(final T object) {
-        return object == null ? respondEmpty() : new ResponseEntity<>(object, HttpStatus.OK);
-    }
+    
 }
