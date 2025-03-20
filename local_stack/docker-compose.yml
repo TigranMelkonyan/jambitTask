@@ -36,7 +36,7 @@ services:
       - SPRING_FLYWAY_SCHEMAS=jambit_feedbacks
       - SPRING_FLYWAY_BASELINE_ON_MIGRATE=true
       - SPRING_FLYWAY_LOCATIONS=classpath:db/migration
-      - SPRING_PROFILES_ACTIVE={}
+      - SPRING_PROFILES_ACTIVE=prod
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}
   
   jambit-iam-app:
