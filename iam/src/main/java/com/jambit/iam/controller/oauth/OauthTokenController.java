@@ -1,18 +1,14 @@
 package com.jambit.iam.controller.oauth;
 
-import com.jambit.iam.controller.AbstractController;
+import com.jambit.iam.controller.AbstractResponseController;
+import com.jambit.iam.controller.mapper.CreateUserTokenMapper;
+import com.jambit.iam.controller.mapper.OauthTokenMapper;
 import com.jambit.iam.controller.rest.model.request.OauthTokenRequest;
-import com.jambit.iam.controller.rest.model.request.UserInfoDetails;
 import com.jambit.iam.controller.rest.model.response.oauth.OauthTokenResponse;
-import com.jambit.iam.domain.entity.user.User;
-import com.jambit.iam.domain.model.common.exception.ErrorCode;
-import com.jambit.iam.domain.model.common.exception.RecordConflictException;
-import com.jambit.iam.controller.rest.model.request.CreateUserTokenRequest;
-import com.jambit.iam.service.jwt.JwtService;
-import com.jambit.iam.service.user.UserService;
+import com.jambit.iam.service.jwt.JwtMediator;
 import com.jambit.iam.service.validator.ModelValidator;
-import com.jambit.iam.util.PasswordUtils;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,33 +22,21 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("iam/oauth/token")
-public class OauthTokenController extends AbstractController {
+@RequiredArgsConstructor
+public class OauthTokenController extends AbstractResponseController {
 
-    private final JwtService jwtService;
-    private final UserService userService;
+    private final JwtMediator jwtMediator;
     private final ModelValidator modelValidator;
+    private final OauthTokenMapper oauthTokenMapper;
+    private final CreateUserTokenMapper createUserTokenMapper;
 
-
-    public OauthTokenController(
-            final JwtService jwtService,
-            final UserService userService,
-            final ModelValidator modelValidator) {
-        this.jwtService = jwtService;
-        this.userService = userService;
-        this.modelValidator = modelValidator;
-    }
 
     @PostMapping
     @ApiOperation(value = "Grant Oauth Token", response = OauthTokenResponse.class)
     public ResponseEntity<OauthTokenResponse> grantToken(@RequestBody OauthTokenRequest request) {
         modelValidator.validate(request);
-        User user = userService.getByUserName(request.getUserName());
-        if (!PasswordUtils.isPasswordMatch(request.getPassword(), user.getPassword())) {
-            throw new RecordConflictException("Invalid credentials", ErrorCode.INVALID_CREDENTIALS);
-        }
-        String token = jwtService.createJwt(new CreateUserTokenRequest(request.getUserName(), request.getPassword(),
-                new UserInfoDetails(user.getId().toString(), user.getEmail(), user.getRole())));
-        return respondOK(OauthTokenResponse.from(token));
+        String token = jwtMediator.grantToken(createUserTokenMapper.toDto(request));
+        return respondOK(oauthTokenMapper.toResponse(token));
     }
 
 }

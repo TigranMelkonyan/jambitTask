@@ -12,9 +12,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OauthTokenResponse {
 
-    private final String accessToken;
-
-    public static OauthTokenResponse from(final String token) {
-        return new OauthTokenResponse(token);
-    }
+    private final String token;
+    
 }

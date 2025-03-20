@@ -10,9 +10,12 @@ import org.springframework.util.StringUtils;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import java.util.HashMap;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -27,39 +30,48 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
 
     @Override
     public PageModel<User> search(final SearchProperties searchProperties) {
-        TypedQuery<User> query = createQuery(searchProperties, "u", User.class, false);
-        TypedQuery<Long> countQuery = createQuery(searchProperties, "count(u)", Long.class, true);
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+
+        CriteriaQuery<User> cq = cb.createQuery(User.class);
+        Root<User> userRoot = cq.from(User.class);
+
+        List<Predicate> predicates = new ArrayList<>();
+
+        if (StringUtils.hasText(searchProperties.getSearchText())) {
+            Predicate usernamePredicate = cb.like(userRoot.get("username"), "%"
+                    + searchProperties.getSearchText() + "%");
+            Predicate emailPredicate = cb.like(userRoot.get("email"), "%"
+                    + searchProperties.getSearchText() + "%");
+            predicates.add(cb.or(usernamePredicate, emailPredicate));
+        }
+
+        if (Objects.nonNull(searchProperties.getStatus())) {
+            predicates.add(cb.equal(userRoot.get("status"), searchProperties.getStatus()));
+        }
+
+        cq.where(predicates.toArray(new Predicate[0]));
+
+        if (Objects.nonNull(searchProperties.getSort())) {
+            if ("desc".equalsIgnoreCase(searchProperties.getSort().getValue())) {
+                cq.orderBy(cb.desc(userRoot.get("username")));
+            } else {
+                cq.orderBy(cb.asc(userRoot.get("username")));
+            }
+        }
+
+        TypedQuery<User> query = entityManager.createQuery(cq);
         PageRequest pageRequest = PageRequest.getPageRequestOrDefault(searchProperties.getPageRequest());
-        query.setFirstResult(pageRequest.getPage());
+        query.setFirstResult(pageRequest.getPage() * pageRequest.getSize());
         query.setMaxResults(pageRequest.getSize());
-        List<User> user = query.getResultList();
-        return new PageModel<>(user, countQuery.getSingleResult());
+
+        List<User> users = query.getResultList();
+
+        CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
+        Root<User> countRoot = countQuery.from(User.class);
+        countQuery.select(cb.count(countRoot)).where(predicates.toArray(new Predicate[0]));
+        Long count = entityManager.createQuery(countQuery).getSingleResult();
+
+        return new PageModel<>(users, count);
     }
 
-    private <T> TypedQuery<T> createQuery(
-            final SearchProperties searchProperties, final String selectCondition,
-            final Class<T> type, boolean count) {
-        Map<String, Object> appliedParams = new HashMap<>();
-        String prefix = " where ";
-        String queryString = " select " + selectCondition + " from User u ";
-        if (Objects.nonNull(searchProperties) && StringUtils.hasText(searchProperties.getSearchText())) {
-            queryString = queryString + prefix + "u.username like :search or u.email like :search ";
-            appliedParams.put("search", "%" + searchProperties.getSearchText() + "%");
-            prefix = " and ";
-        }
-        queryString = queryString + prefix + " u.status=:status ";
-        appliedParams.put("status", searchProperties.getStatus());
-        String sortOrder = "asc";
-        if (Objects.nonNull(searchProperties.getSort())) {
-            sortOrder = searchProperties.getSort().getValue();
-        }
-        if (Objects.nonNull(searchProperties.getSort()) && !count) {
-            String orderByClause = " order by " + " " + sortOrder;
-            queryString += orderByClause;
-        }
-        
-        TypedQuery<T> query = entityManager.createQuery(queryString, type);
-        appliedParams.forEach(query::setParameter);
-        return query;
-    }
 }

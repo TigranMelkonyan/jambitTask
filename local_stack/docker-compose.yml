@@ -8,8 +8,8 @@ services:
     networks:
       - db_network
     environment:
-      - POSTGRES_USER=tiko
-      - POSTGRES_PASSWORD=tiko123!
+      - POSTGRES_USER={DOCKER_DB_USER}
+      - POSTGRES_PASSWORD={DOCKER_DB_PASS}
       - POSTGRES_DB=jambit_db
     ports:
       - 5433:5432
