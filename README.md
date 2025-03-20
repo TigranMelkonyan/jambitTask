@@ -10,6 +10,16 @@
     IAM (Identity and Access Management) Service: Handles authentication and authorization, 
     ensuring secure access to the system. It uses OAuth2 and JWT for token-based security.
 
+## Architecture Overview
+
+    The IAM service uses a layered architectural design pattern because it primarily relies on REST-based CRUD
+    operations, which is a common approach for security-related services.
+
+    The Feedback service follows a hexagonal architectural pattern, as it requires flexibility to integrate 
+    multiple external systems and extensibility to integrate several features in the future. 
+    This pattern enables better separation between the core logic and external dependencies.
+
+
 ### Reference Documentation
 
 * [Spring Boot Documentation](https://docs.spring.io/spring-boot/index.html)
@@ -33,11 +43,10 @@
     password: Jambit213@
     userName: jambittestuser3
 
-
 ### Application build/run description
 
 1. Go to the project base directory f.e cd {base-dir}/jambitTask
-2. Make: mvn clean install (it will run default dev profile)
+2. Make: mvn clean install (by default it will run default dev profile)
 3. Set the environment variables for production:
 
        export DB_URL=jdbc:postgresql://common-db:5432/jambit_db
@@ -47,10 +56,9 @@
        export FLYWAY_PASSWORD=<flyway_password>
        export JWT_SECRET_KEY=<jwt_secret>
 
-4. Make: sudo -E docker-compose -f local_stack/docker-compose.yml up --build
+4. Make: -E docker-compose -f local_stack/docker-compose.yml up --build
 5. After running application you can retrieve jwt token by default iam users credentials
    mentioned above and use feedback APIs.
-
 
 ### OAUTH API Description
 

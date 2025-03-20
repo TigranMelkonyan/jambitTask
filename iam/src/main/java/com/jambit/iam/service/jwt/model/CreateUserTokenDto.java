@@ -1,4 +1,4 @@
-package com.jambit.iam.controller.rest.model.request;
+package com.jambit.iam.service.jwt.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -14,15 +14,12 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class CreateUserTokenRequest {
-    
+public class CreateUserTokenDto {
+
     @NotNull(message = "userName required")
     private final String userName;
-    
+
     @NotNull(message = "userId required")
     private final String password;
-    
-    @NotNull
-    private final UserInfoDetails info;
     
 }
