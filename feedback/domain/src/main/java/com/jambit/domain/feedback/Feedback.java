@@ -3,15 +3,9 @@ package com.jambit.domain.feedback;
 import com.jambit.domain.common.audit.AuditableBaseEntity;
 import com.jambit.domain.common.exception.BusinessRuleViolationException;
 import com.jambit.domain.common.exception.ErrorCode;
-import lombok.Getter;
-import lombok.Setter;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import java.util.UUID;
 
 /**
@@ -20,25 +14,14 @@ import java.util.UUID;
  * Time: 11:52 PM
  */
 @Entity
-@Getter
-@Setter
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"feedbackTarget_id", "userId"})})
 public class Feedback extends AuditableBaseEntity {
 
     @ManyToOne
-    @JoinColumn(name = "feedbackTarget_id", nullable = false)
     private FeedbackTarget feedbackTarget;
 
-    @Column(nullable = false, length = 50)
     private String title;
-
-    @Column(length = 1000)
     private String comment;
-
-    @Column(nullable = false)
     private short score;
-
-    @Column(nullable = false)
     private UUID userId;
 
     public static void validateContent(final Feedback feedback) {
@@ -63,6 +46,46 @@ public class Feedback extends AuditableBaseEntity {
         if (title == null || title.length() > 1000) {
             throw new BusinessRuleViolationException("Feedback comment can be max 100 characters", ErrorCode.RULE_EXCEPTION);
         }
+    }
+
+    public FeedbackTarget getFeedbackTarget() {
+        return feedbackTarget;
+    }
+
+    public void setFeedbackTarget(final FeedbackTarget feedbackTarget) {
+        this.feedbackTarget = feedbackTarget;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(final String title) {
+        this.title = title;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(final String comment) {
+        this.comment = comment;
+    }
+
+    public short getScore() {
+        return score;
+    }
+
+    public void setScore(final short score) {
+        this.score = score;
+    }
+
+    public UUID getUserId() {
+        return userId;
+    }
+
+    public void setUserId(final UUID userId) {
+        this.userId = userId;
     }
 
     @Override

@@ -1,10 +1,7 @@
 package com.jambit.domain.feedback;
 
 import com.jambit.domain.common.audit.AuditableBaseEntity;
-import lombok.Getter;
-import lombok.Setter;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -15,16 +12,28 @@ import javax.persistence.Enumerated;
  * Time: 12:14 AM
  */
 @Entity
-@Getter
-@Setter
 public class FeedbackTarget extends AuditableBaseEntity {
-    
-    @Column(nullable = false)
+
     @Enumerated(EnumType.STRING)
     private TargetType targetType;
 
-    @Column(unique = true, nullable = false, length = 100)
     private String name;
+
+    public TargetType getTargetType() {
+        return targetType;
+    }
+
+    public void setTargetType(final TargetType targetType) {
+        this.targetType = targetType;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
+    }
 
     @Override
     public boolean equals(Object o) {
