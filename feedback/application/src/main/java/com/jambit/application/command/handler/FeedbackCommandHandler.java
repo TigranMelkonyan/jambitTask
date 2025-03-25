@@ -10,6 +10,7 @@ import com.jambit.domain.repository.feedback.target.FeedbackTargetRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -27,6 +28,7 @@ public class FeedbackCommandHandler {
     private final FeedbackMapper feedbackMapper;
     private final FeedbackTargetRepository feedbackTargetRepository;
 
+    @Transactional
     public Feedback handle(final CreateFeedbackCommand command) {
         log.info("Creating feedback with user id - {} ", command.getUserId());
         if (feedbackRepository.existsByUserIdAndTargetId(command.getUserId(), command.getFeedbackTargetId())) {
@@ -37,11 +39,13 @@ public class FeedbackCommandHandler {
         Feedback feedback = feedbackMapper.createFeedbackCommandToEntity(command);
         FeedbackTarget feedbackTarget = feedbackTargetRepository.getById(command.getFeedbackTargetId());
         feedback.setFeedbackTarget(feedbackTarget);
+        Feedback.validateContent(feedback);
         Feedback result = feedbackRepository.save(feedback);
         log.info("Successfully created feedback with user id - {}, result - {}", command.getUserId(), result);
         return result;
     }
 
+    @Transactional
     public void handle(final UUID id) {
         log.info("Deleting feedback with id - {} ", id);
         feedbackRepository.deleteById(id);

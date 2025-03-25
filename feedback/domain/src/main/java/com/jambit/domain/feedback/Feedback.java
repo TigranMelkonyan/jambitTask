@@ -1,6 +1,8 @@
 package com.jambit.domain.feedback;
 
 import com.jambit.domain.common.audit.AuditableBaseEntity;
+import com.jambit.domain.common.exception.BusinessRuleViolationException;
+import com.jambit.domain.common.exception.ErrorCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -38,6 +40,30 @@ public class Feedback extends AuditableBaseEntity {
 
     @Column(nullable = false)
     private UUID userId;
+
+    public static void validateContent(final Feedback feedback) {
+        validateScore(feedback.getScore());
+        validateComment(feedback.getComment());
+        validateTitle(feedback.getTitle());
+    }
+
+    private static void validateScore(final short score) {
+        if (score < 0 || score > 10) {
+            throw new BusinessRuleViolationException("Feedback score must be between 0 to 10", ErrorCode.RULE_EXCEPTION);
+        }
+    }
+
+    private static void validateComment(final String comment) {
+        if (comment == null || comment.length() > 1000) {
+            throw new BusinessRuleViolationException("Feedback comment can be max 1000 characters", ErrorCode.RULE_EXCEPTION);
+        }
+    }
+
+    private static void validateTitle(final String title) {
+        if (title == null || title.length() > 1000) {
+            throw new BusinessRuleViolationException("Feedback comment can be max 100 characters", ErrorCode.RULE_EXCEPTION);
+        }
+    }
 
     @Override
     public boolean equals(Object o) {

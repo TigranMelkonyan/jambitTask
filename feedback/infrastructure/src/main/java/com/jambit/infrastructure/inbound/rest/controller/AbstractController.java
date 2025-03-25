@@ -1,5 +1,6 @@
 package com.jambit.infrastructure.inbound.rest.controller;
 
+import com.jambit.domain.common.exception.BusinessRuleViolationException;
 import com.jambit.domain.common.exception.ErrorCode;
 import com.jambit.domain.common.exception.RecordConflictException;
 import com.jambit.infrastructure.inbound.rest.model.response.ErrorResponse;
@@ -61,6 +62,13 @@ public abstract class AbstractController {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(BusinessRuleViolationException.class)
+    @ResponseBody
+    protected final ErrorResponse handle(final BusinessRuleViolationException e) {
+        return new ErrorResponse(ErrorCode.INVALID_CREDENTIALS, e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Map<String, String> handleValidationExceptions(final MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
@@ -73,5 +81,5 @@ public abstract class AbstractController {
                 });
         return errors;
     }
-    
+
 }

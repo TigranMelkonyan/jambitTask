@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.UUID;
 
 /**
@@ -24,6 +25,7 @@ public class FeedbackTargetCommandHandler {
     private final FeedbackTargetRepository repository;
     private final FeedbackTargetMapper mapper;
 
+    @Transactional
     public FeedbackTarget handle(final CreateFeedbackTargetCommand command) {
         log.info("Creating feedback target with target type- {} ", command.getTargetType());
         if (repository.existsByName(command.getName())) {
@@ -36,6 +38,7 @@ public class FeedbackTargetCommandHandler {
         return result;
     }
 
+    @Transactional
     public void handle(final UUID id) {
         log.info("Deleting feedback target with id - {}", id);
         repository.delete(id);
