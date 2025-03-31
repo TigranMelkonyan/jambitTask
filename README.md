@@ -47,7 +47,7 @@
 
 1. Go to the project base directory f.e cd {base-dir}/jambitTask
 2. Make: mvn clean install (by default it will run default dev profile)
-3. Set the environment variables for production:
+3. Set the environment variables:
 
        export DB_URL=jdbc:postgresql://common-db:5432/jambit_db
        export DB_USERNAME=<db_username>
