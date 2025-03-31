@@ -24,7 +24,7 @@ public class Feedback extends AuditableBaseEntity {
     private short score;
     private UUID userId;
 
-    //Defines business restrictions
+    //Validates business restrictions
     public static void validateContent(final Feedback feedback) {
         validateScore(feedback.getScore());
         validateComment(feedback.getComment());
