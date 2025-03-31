@@ -44,5 +44,4 @@ public class FeedbackTargetQueryHandler {
         log.info("Successfully retrieved feedback targets result - {}", pages);
         return pages;
     }
-
 }

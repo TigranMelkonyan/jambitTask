@@ -53,7 +53,4 @@ public class FeedbackCommandHandler {
         feedbackRepository.deleteById(id);
         log.info("Successfully deleted feedback with id - {}", id);
     }
-    
-    
-
 }

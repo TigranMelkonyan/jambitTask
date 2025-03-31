@@ -83,5 +83,4 @@ public class FeedbackTargetController extends AbstractResponseController {
         feedbackTargetCommandHandler.handle(id);
         return respondEmpty();
     }
-
 }

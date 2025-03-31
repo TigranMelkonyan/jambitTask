@@ -49,5 +49,4 @@ public class FeedbackTargetCommandHandler {
         repository.delete(id);
         log.info("Successfully deleted feedback target with id - {}", id);
     }
-
 }

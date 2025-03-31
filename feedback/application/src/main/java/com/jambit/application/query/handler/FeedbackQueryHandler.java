@@ -53,5 +53,4 @@ public class FeedbackQueryHandler {
         log.info("Successfully retrieved feedbacks with target id - {}, result - {}", query.getTargetId(), pages);
         return pages;
     }
-
 }
