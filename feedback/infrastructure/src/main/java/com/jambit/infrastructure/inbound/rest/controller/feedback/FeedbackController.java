@@ -1,9 +1,9 @@
 package com.jambit.infrastructure.inbound.rest.controller.feedback;
 
 import com.jambit.application.command.CreateFeedbackCommand;
+import com.jambit.application.command.handler.FeedbackCommandHandler;
 import com.jambit.application.query.GetAllFeedbacksByTargetQuery;
-import com.jambit.application.service.FeedbackCommandService;
-import com.jambit.application.service.FeedbackQueryService;
+import com.jambit.application.query.handler.FeedbackQueryHandler;
 import com.jambit.application.service.validation.ModelValidator;
 import com.jambit.application.util.NullCheckUtils;
 import com.jambit.domain.common.page.PageModel;
@@ -41,8 +41,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class FeedbackController extends AbstractResponseController {
 
-    private final FeedbackQueryService feedbackQueryService;
-    private final FeedbackCommandService feedbackCommandService;
+    private final FeedbackQueryHandler feedbackQueryHandler;
+    private final FeedbackCommandHandler feedbackCommandHandler;
     private final FeedbackResponseMapper feedbackResponseMapper;
     private final FeedbackRequestToCommandMapper feedbackRequestToCommandMapper;
 
@@ -53,7 +53,7 @@ public class FeedbackController extends AbstractResponseController {
         ModelValidator.validate(request);
         CreateFeedbackCommand command = feedbackRequestToCommandMapper.createFeedbackCommand(request);
         command.setUserId(SecurityContextUtil.currentUserId());
-        Feedback feedback = feedbackCommandService.create(command);
+        Feedback feedback = feedbackCommandHandler.handle(command);
         return respondOK(feedbackResponseMapper.feedbackToResponse(feedback));
     }
 
@@ -61,7 +61,7 @@ public class FeedbackController extends AbstractResponseController {
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public ResponseEntity<FeedbackResponse> getFeedback(@PathVariable("id") UUID id) {
         NullCheckUtils.checkNullConstraints(List.of("id"), id);
-        Feedback feedback = feedbackQueryService.findById(id);
+        Feedback feedback = feedbackQueryHandler.findById(id);
         return respondOK(feedbackResponseMapper.feedbackToResponse(feedback));
     }
 
@@ -69,7 +69,7 @@ public class FeedbackController extends AbstractResponseController {
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<List<FeedbackResponse>> getFeedbackByUser(@PathVariable("id") UUID id) {
         NullCheckUtils.checkNullConstraints(List.of("id"), id);
-        List<Feedback> feedbacks = feedbackQueryService.findByUserId(id);
+        List<Feedback> feedbacks = feedbackQueryHandler.findByUserId(id);
         List<FeedbackResponse> responses = feedbacks.stream()
                 .map(feedbackResponseMapper::feedbackToResponse)
                 .collect(Collectors.toList());
@@ -83,8 +83,8 @@ public class FeedbackController extends AbstractResponseController {
             final int pageSize,
             @PathVariable("target_id") final UUID targetId) {
         NullCheckUtils.checkNullConstraints(List.of("pageNumber", "pageSize"), pageNumber, pageSize);
-        PageModel<Feedback> result = feedbackQueryService
-                .getAll(new GetAllFeedbacksByTargetQuery(targetId, pageNumber, pageSize));
+        PageModel<Feedback> result = feedbackQueryHandler
+                .getAllByTarget(new GetAllFeedbacksByTargetQuery(targetId, pageNumber, pageSize));
         PageResponse<FeedbackResponse> response = new PageResponse<>(result
                 .getItems()
                 .stream()
@@ -98,7 +98,7 @@ public class FeedbackController extends AbstractResponseController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> delete(@PathVariable final UUID id) {
         NullCheckUtils.checkNullConstraints(List.of("id"), id);
-        feedbackCommandService.deleteById(id);
+        feedbackCommandHandler.handle(id);
         return respondEmpty();
     }
 }

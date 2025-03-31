@@ -1,8 +1,8 @@
 package com.jambit.infrastructure.inbound.rest.controller.feedback;
 
+import com.jambit.application.command.handler.FeedbackTargetCommandHandler;
 import com.jambit.application.query.GetAllFeedbackTargetsQuery;
-import com.jambit.application.service.FeedbackTargetCommandService;
-import com.jambit.application.service.FeedbackTargetQueryService;
+import com.jambit.application.query.handler.FeedbackTargetQueryHandler;
 import com.jambit.application.service.validation.ModelValidator;
 import com.jambit.application.util.NullCheckUtils;
 import com.jambit.domain.common.page.PageModel;
@@ -40,8 +40,8 @@ import java.util.stream.Collectors;
 public class FeedbackTargetController extends AbstractResponseController {
 
     private final FeedbackTargetResponseMapper feedbackResponseMapper;
-    private final FeedbackTargetCommandService feedbackTargetCommandService;
-    private final FeedbackTargetQueryService feedbackTargetQueryService;
+    private final FeedbackTargetQueryHandler feedbackTargetQueryHandler;
+    private final FeedbackTargetCommandHandler feedbackTargetCommandHandler;
     private final FeedbackTargetRequestToCommandMapper feedbackRequestToCommandMapper;
 
 
@@ -49,7 +49,7 @@ public class FeedbackTargetController extends AbstractResponseController {
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<FeedbackTargetResponse> create(@RequestBody final CreateFeedbackTargetRequest request) {
         ModelValidator.validate(request);
-        FeedbackTarget feedbackTarget = feedbackTargetCommandService.create(feedbackRequestToCommandMapper.createFeedbackTargetCommand(request));
+        FeedbackTarget feedbackTarget = feedbackTargetCommandHandler.handle(feedbackRequestToCommandMapper.createFeedbackTargetCommand(request));
         return respondOK(feedbackResponseMapper.feedbackTargetToResponse(feedbackTarget));
     }
 
@@ -57,7 +57,7 @@ public class FeedbackTargetController extends AbstractResponseController {
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public ResponseEntity<FeedbackTargetResponse> getFeedbackTarget(@PathVariable("id") UUID id) {
         NullCheckUtils.checkNullConstraints(List.of("id"), id);
-        FeedbackTarget feedbackTarget = feedbackTargetQueryService.findById(id);
+        FeedbackTarget feedbackTarget = feedbackTargetQueryHandler.findById(id);
         return respondOK(feedbackResponseMapper.feedbackTargetToResponse(feedbackTarget));
     }
 
@@ -65,7 +65,7 @@ public class FeedbackTargetController extends AbstractResponseController {
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public ResponseEntity<PageResponse<FeedbackTargetResponse>> getFeedbackTargets(final int pageNumber, final int pageSize) {
         NullCheckUtils.checkNullConstraints(List.of("pageNumber", "pageSize"), pageNumber, pageSize);
-        PageModel<FeedbackTarget> result = feedbackTargetQueryService
+        PageModel<FeedbackTarget> result = feedbackTargetQueryHandler
                 .getAll(new GetAllFeedbackTargetsQuery(pageNumber, pageSize));
         PageResponse<FeedbackTargetResponse> response = new PageResponse<>(result
                 .getItems()
@@ -80,7 +80,7 @@ public class FeedbackTargetController extends AbstractResponseController {
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<FeedbackTargetResponse> delete(@PathVariable final UUID id) {
         NullCheckUtils.checkNullConstraints(List.of("id"), id);
-        feedbackTargetCommandService.delete(id);
+        feedbackTargetCommandHandler.handle(id);
         return respondEmpty();
     }
 
