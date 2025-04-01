@@ -1,6 +1,7 @@
 package com.jambit.iam.service.jwt;
 
-import com.jambit.iam.controller.rest.model.request.CreateUserTokenRequest;
+import com.jambit.iam.service.jwt.model.CreateUserTokenDto;
+import com.jambit.iam.service.user.model.UserInfoDetails;
 
 /**
  * Created by Tigran Melkonyan
@@ -8,5 +9,5 @@ import com.jambit.iam.controller.rest.model.request.CreateUserTokenRequest;
  * Time: 12:12 PM
  */
 public interface JwtService {
-    String createJwt(CreateUserTokenRequest info);
+    String createJwt(final CreateUserTokenDto info, final UserInfoDetails userInfoDetails);
 }

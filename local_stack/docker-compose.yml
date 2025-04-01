@@ -8,8 +8,8 @@ services:
     networks:
       - db_network
     environment:
-      - POSTGRES_USER=tiko
-      - POSTGRES_PASSWORD=tiko123!
+      - POSTGRES_USER={DOCKER_DB_USER}
+      - POSTGRES_PASSWORD={DOCKER_DB_PASS}
       - POSTGRES_DB=jambit_db
     ports:
       - 5433:5432
@@ -36,7 +36,7 @@ services:
       - SPRING_FLYWAY_SCHEMAS=jambit_feedbacks
       - SPRING_FLYWAY_BASELINE_ON_MIGRATE=true
       - SPRING_FLYWAY_LOCATIONS=classpath:db/migration
-      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_PROFILES_ACTIVE={}
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}
   
   jambit-iam-app:

@@ -13,3 +13,5 @@ CREATE TABLE iam_user
     CONSTRAINT uk_email UNIQUE (email),
     CONSTRAINT uk_username UNIQUE (username)
 );
+
+CREATE INDEX username_idx ON iam_user (username);

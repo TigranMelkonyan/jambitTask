@@ -1,7 +1,8 @@
 package com.jambit.iam.service.jwt;
 
 import com.jambit.iam.conf.security.jwt.JwtClaim;
-import com.jambit.iam.controller.rest.model.request.CreateUserTokenRequest;
+import com.jambit.iam.service.jwt.model.CreateUserTokenDto;
+import com.jambit.iam.service.user.model.UserInfoDetails;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.log4j.Log4j2;
@@ -44,16 +45,16 @@ public class JwtServiceImpl implements JwtService {
 
 
     @Override
-    public String createJwt(final CreateUserTokenRequest userDetails) {
-        log.info("Creating jwt token for user with id - {} ", userDetails.getInfo().getUserId());
+    public String createJwt(final CreateUserTokenDto userDetails, final UserInfoDetails userInfoDetails) {
+        log.info("Creating jwt token for user with id - {} ", userInfoDetails.getUserId());
         final var jti = UUID.randomUUID().toString();
         Date expirationDate = Date.from(Instant.now().plus(validity));
         final Key signingKey = new SecretKeySpec(jwtSecret.getBytes(), algorithm.getJcaName());
         Map<String, Object> claims = new HashMap<>();
-        claims.put(JwtClaim.UID.getValue(), userDetails.getInfo().getUserId());
-        claims.put(JwtClaim.SUB.getValue(), userDetails.getInfo().getUserId());
-        claims.put(JwtClaim.EMAIL.getValue(), userDetails.getInfo().getEmail());
-        claims.put(JwtClaim.AUTHORITIES.getValue(), userDetails.getInfo().getRole());
+        claims.put(JwtClaim.UID.getValue(), userInfoDetails.getUserId());
+        claims.put(JwtClaim.SUB.getValue(), userInfoDetails.getUserId());
+        claims.put(JwtClaim.EMAIL.getValue(), userInfoDetails.getEmail());
+        claims.put(JwtClaim.AUTHORITIES.getValue(), userInfoDetails.getRole());
         String token = Jwts.builder()
                 .setId(jti)
                 .setIssuedAt(new Date())
@@ -62,7 +63,7 @@ public class JwtServiceImpl implements JwtService {
                 .addClaims(claims)
                 .signWith(algorithm, signingKey)
                 .compact();
-        log.info("Successfully created jwt token for user with id - {} ", userDetails.getInfo().getUserId());
+        log.info("Successfully created jwt token for user with id - {} ", userInfoDetails.getUserId());
         return token;
     }
 

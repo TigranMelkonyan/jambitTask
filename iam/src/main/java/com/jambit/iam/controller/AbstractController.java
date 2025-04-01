@@ -4,7 +4,6 @@ import com.jambit.iam.controller.rest.model.response.error.ErrorResponse;
 import com.jambit.iam.domain.model.common.exception.ErrorCode;
 import com.jambit.iam.domain.model.common.exception.RecordConflictException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -45,7 +44,7 @@ public abstract class AbstractController {
     protected final ErrorResponse handle(final ServiceUnavailableException e) {
         return new ErrorResponse(ErrorCode.ILLEGAL_ARGUMENT, e.getMessage());
     }
-    
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseBody
@@ -65,17 +64,5 @@ public abstract class AbstractController {
                     errors.put(fieldName, errorMessage);
                 });
         return errors;
-    }
-
-    protected <T> ResponseEntity<T> respondOK(final T object) {
-        return respond(object);
-    }
-
-    protected <T> ResponseEntity<T> respondEmpty() {
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    private <T> ResponseEntity<T> respond(final T object) {
-        return object == null ? respondEmpty() : new ResponseEntity<>(object, HttpStatus.OK);
     }
 }
