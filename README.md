@@ -47,7 +47,7 @@
 
 1. Go to the project base directory f.e cd {base-dir}/jambitTask
 2. Make: mvn clean install (by default it will run default dev profile)
-3. Set the environment variables for production:
+3. Set the environment variables:
 
        export DB_URL=jdbc:postgresql://common-db:5432/jambit_db
        export DB_USERNAME=<db_username>
@@ -81,7 +81,7 @@
 
 * [swagger url](http://localhost:8080/swagger-ui.html)
 
-* [feedback-target-command-controller]
+* [feedback-target-controller]
 
       curl -X POST "http://localhost:8080/api/feedback_targets/command" \
           -H "Accept: */*" \
@@ -96,8 +96,6 @@
           -H "Accept: */*" \
           -H "Authorization: Bearer {token}"
 
-* [feedback-target-query-controller]
-
       curl -X GET "http://localhost:8080/api/feedback_targets/query/{id}" \
           -H "Accept: */*" \
           -H "Authorization: Bearer {token}"
@@ -107,7 +105,7 @@
            -H "Authorization: Bearer {token}"
 
 
-* [feedback-command-controller]
+* [feedback-controller]
 
       curl -X POST "http://localhost:8080/api/feedbacks/command" \
            -H "Accept: */*" \
@@ -123,8 +121,6 @@
       curl -X DELETE "http://localhost:8080/api/feedbacks/command/{id}" \
           -H "Accept: */*" \
           -H "Authorization: Bearer {token}"
-
-* [feedback-query-controller]
 
       curl -X GET "http://localhost:8080/api/feedbacks/query/{id}" \
            -H "Accept: */*" \
