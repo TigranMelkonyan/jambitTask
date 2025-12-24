@@ -5,6 +5,8 @@ import com.jambit.domain.common.exception.RecordNotFoundException;
 import com.jambit.domain.common.page.PageModel;
 import com.jambit.domain.feedback.FeedbackTarget;
 import com.jambit.domain.repository.feedback.target.FeedbackTargetRepository;
+import com.jambit.infrastructure.outbound.persistence.entity.FeedbackTargetEntity;
+import com.jambit.infrastructure.outbound.persistence.mapper.FeedbackTargetEntityMapper;
 import com.jambit.infrastructure.outbound.persistence.validation.PersistenceErrorProcessor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -30,8 +32,9 @@ public class FeedbackTargetRepositoryAdapter extends PersistenceErrorProcessor i
     @Override
     @Transactional(readOnly = true)
     public FeedbackTarget getById(final UUID id) {
-        return repository.findByIdAndAuditStatus(id)
+        FeedbackTargetEntity entity = repository.findByIdAndAuditStatus(id)
                 .orElseThrow(() -> new RecordNotFoundException(("Feedback target not exists with id: " + id)));
+        return FeedbackTargetEntityMapper.toModel(entity);
     }
 
     @Override
@@ -45,7 +48,9 @@ public class FeedbackTargetRepositoryAdapter extends PersistenceErrorProcessor i
     public FeedbackTarget save(final FeedbackTarget feedbackTarget) {
         FeedbackTarget savedFeedback = null;
         try {
-            savedFeedback = repository.save(feedbackTarget);
+            FeedbackTargetEntity toSave = FeedbackTargetEntityMapper.toEntity(feedbackTarget);
+            FeedbackTargetEntity saved = repository.save(toSave);
+            savedFeedback = FeedbackTargetEntityMapper.toModel(saved);
         } catch (Exception e) {
             handlePersistenceException("Saving record", e);
         }
@@ -58,7 +63,7 @@ public class FeedbackTargetRepositoryAdapter extends PersistenceErrorProcessor i
         try {
             FeedbackTarget target = getById(id);
             target.setStatus(ModelStatus.DELETED);
-            repository.save(target);
+            repository.save(FeedbackTargetEntityMapper.toEntity(target));
         } catch (Exception e) {
             handlePersistenceException("Deleting record", e);
         }
@@ -68,11 +73,11 @@ public class FeedbackTargetRepositoryAdapter extends PersistenceErrorProcessor i
     @Transactional
     public PageModel<FeedbackTarget> getAll(final int page, final int size) {
         long totalCount;
-        Page<FeedbackTarget> feedbackPage;
+        Page<FeedbackTargetEntity> feedbackPage;
         Pageable pageable = PageRequest.of(page, size);
         feedbackPage = repository.findAllFeedbackTargets(pageable);
         totalCount = feedbackPage.getTotalElements();
 
-        return new PageModel<>(Objects.requireNonNull(feedbackPage).getContent(), totalCount);
+        return new PageModel<>(Objects.requireNonNull(feedbackPage).map(FeedbackTargetEntityMapper::toModel).getContent(), totalCount);
     }
 }

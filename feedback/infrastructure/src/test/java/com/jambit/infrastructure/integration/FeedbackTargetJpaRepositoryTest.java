@@ -1,9 +1,9 @@
 package com.jambit.infrastructure.integration;
 
 import com.jambit.domain.common.base.ModelStatus;
-import com.jambit.domain.feedback.FeedbackTarget;
 import com.jambit.domain.feedback.TargetType;
 import com.jambit.infrastructure.outbound.persistence.FeedbackTargetJpaRepository;
+import com.jambit.infrastructure.outbound.persistence.entity.FeedbackTargetEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Time: 2:52 PM
  */
 @DataJpaTest
-@EntityScan(basePackages = {"com.jambit.domain"})
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@EntityScan(basePackages = {"com.jambit.infrastructure"})
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 class FeedbackTargetJpaRepositoryTest {
 
     @Autowired
@@ -31,7 +31,7 @@ class FeedbackTargetJpaRepositoryTest {
     
     @BeforeEach
     void setUp() {
-        FeedbackTarget feedbackTarget = new FeedbackTarget();
+        FeedbackTargetEntity feedbackTarget = new FeedbackTargetEntity();
         feedbackTarget.setStatus(ModelStatus.ACTIVE);
         feedbackTarget.setName("TestTarget");
         feedbackTarget.setTargetType(TargetType.RESTAURANT);
@@ -51,17 +51,16 @@ class FeedbackTargetJpaRepositoryTest {
     @Test
     void shouldReturnAllFeedbackTargets() {
         for (int i = 0; i < 5; i++) {
-            FeedbackTarget feedbackTarget = new FeedbackTarget();
+            FeedbackTargetEntity feedbackTarget = new FeedbackTargetEntity();
             feedbackTarget.setStatus(ModelStatus.ACTIVE);
             feedbackTarget.setTargetType(TargetType.RESTAURANT);
             feedbackTarget.setName("target" + "_" + i);
             repository.save(feedbackTarget);
         }
 
-        Page<FeedbackTarget> page = repository.findAllFeedbackTargets(Pageable.ofSize(5));
+        Page<FeedbackTargetEntity> page = repository.findAllFeedbackTargets(Pageable.ofSize(5));
 
         assertTrue(page.getTotalElements() > 0);
 
     }
 }
-

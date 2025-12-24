@@ -7,6 +7,8 @@ import com.jambit.domain.feedback.TargetType;
 import com.jambit.infrastructure.outbound.persistence.FeedbackJpaRepository;
 import com.jambit.infrastructure.outbound.persistence.FeedbackRepositoryAdapter;
 import com.jambit.infrastructure.outbound.persistence.FeedbackTargetJpaRepository;
+import com.jambit.infrastructure.outbound.persistence.entity.FeedbackEntity;
+import com.jambit.infrastructure.outbound.persistence.entity.FeedbackTargetEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +34,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Time: 3:31 PM
  */
 @DataJpaTest
-@EntityScan(basePackages = {"com.jambit.domain"})
+@EntityScan(basePackages = {"com.jambit.infrastructure"})
 @Import(FeedbackRepositoryAdapter.class)
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 class FeedbackJpaRepositoryTest {
 
     @Autowired
@@ -47,7 +49,7 @@ class FeedbackJpaRepositoryTest {
     private FeedbackRepositoryAdapter feedbackRepositoryAdapter;
 
     private UUID feedbackId;
-    private FeedbackTarget feedbackTarget;
+    private FeedbackTargetEntity feedbackTargetEntity;
     private UUID userId;
     private UUID targetId;
 
@@ -55,17 +57,17 @@ class FeedbackJpaRepositoryTest {
     void setUp() {
         userId = UUID.randomUUID();
 
-        feedbackTarget = new FeedbackTarget();
-        feedbackTarget.setName("test");
-        feedbackTarget.setTargetType(TargetType.RESTAURANT);
-        feedbackTargetJpaRepository.save(feedbackTarget);
-        targetId = feedbackTarget.getId();
+        feedbackTargetEntity = new FeedbackTargetEntity();
+        feedbackTargetEntity.setName("test");
+        feedbackTargetEntity.setTargetType(TargetType.RESTAURANT);
+        feedbackTargetJpaRepository.save(feedbackTargetEntity);
+        targetId = feedbackTargetEntity.getId();
 
-        Feedback feedback = new Feedback();
-        feedback.setId(feedbackId);
+        FeedbackEntity feedback = new FeedbackEntity();
         feedback.setUserId(userId);
-        feedback.setFeedbackTarget(feedbackTarget);
+        feedback.setFeedbackTarget(feedbackTargetEntity);
         feedback.setTitle("title");
+        feedback.setScore((short) 1);
         feedback.setStatus(ModelStatus.ACTIVE);
         feedbackJpaRepository.save(feedback);
         feedbackId = feedback.getId();
@@ -73,7 +75,7 @@ class FeedbackJpaRepositoryTest {
 
     @Test
     void shouldFindFeedbackByUserId() {
-        List<Feedback> feedbacks = feedbackJpaRepository.findByUserId(userId);
+        List<FeedbackEntity> feedbacks = feedbackJpaRepository.findByUserId(userId);
 
         assertNotNull(feedbacks);
         assertFalse(feedbacks.isEmpty());
@@ -82,7 +84,7 @@ class FeedbackJpaRepositoryTest {
 
     @Test
     void shouldReturnFeedbackById() {
-        Optional<Feedback> result = feedbackJpaRepository.findById(feedbackId);
+        Optional<FeedbackEntity> result = feedbackJpaRepository.findById(feedbackId);
 
         assertTrue(result.isPresent());
         assertEquals(feedbackId, result.get().getId());
@@ -91,7 +93,7 @@ class FeedbackJpaRepositoryTest {
     @Test
     void shouldReturnFalseIfFeedbackDoesNotExist() {
         UUID nonExistentFeedbackId = UUID.randomUUID();
-        Optional<Feedback> result = feedbackJpaRepository.findById(nonExistentFeedbackId);
+        Optional<FeedbackEntity> result = feedbackJpaRepository.findById(nonExistentFeedbackId);
 
         assertFalse(result.isPresent());
     }
@@ -100,7 +102,7 @@ class FeedbackJpaRepositoryTest {
     void shouldDeleteFeedbackById() {
         feedbackJpaRepository.deleteById(feedbackId);
 
-        Optional<Feedback> feedbacks = feedbackJpaRepository.findById(feedbackId);
+        Optional<FeedbackEntity> feedbacks = feedbackJpaRepository.findById(feedbackId);
         assertTrue(feedbacks.isEmpty());
     }
 
@@ -122,20 +124,23 @@ class FeedbackJpaRepositoryTest {
     @Test
     void shouldReturnFeedbacksForTargetId() {
         for (int i = 0; i < 5; i++) {
+            FeedbackTarget domainTarget = new FeedbackTarget();
+            domainTarget.setId(feedbackTargetEntity.getId());
+            domainTarget.setName(feedbackTargetEntity.getName());
+            domainTarget.setTargetType(feedbackTargetEntity.getTargetType());
             Feedback feedback = new Feedback();
             feedback.setScore((short) 8);
             feedback.setTitle("title");
             feedback.setUserId(UUID.randomUUID());
             feedback.setStatus(ModelStatus.ACTIVE);
-            feedback.setFeedbackTarget(feedbackTarget);
+            feedback.setFeedbackTarget(domainTarget);
             feedbackRepositoryAdapter.save(feedback);
         }
 
         PageRequest pageable = PageRequest.of(0, 10);
-        Page<Feedback> page = feedbackJpaRepository.findAllForFeedbackTarget(targetId, pageable);
+        Page<FeedbackEntity> page = feedbackJpaRepository.findAllForFeedbackTarget(targetId, pageable);
 
         assertFalse(page.isEmpty());
         assertTrue(page.getTotalElements() > 0);
     }
 }
-

@@ -4,8 +4,6 @@ import com.jambit.domain.common.audit.AuditableBaseEntity;
 import com.jambit.domain.common.exception.BusinessRuleViolationException;
 import com.jambit.domain.common.exception.ErrorCode;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
 import java.util.UUID;
 
 /**
@@ -13,10 +11,8 @@ import java.util.UUID;
  * Date: 2/19/25
  * Time: 11:52 PM
  */
-@Entity
 public class Feedback extends AuditableBaseEntity {
-
-    @ManyToOne
+    
     private FeedbackTarget feedbackTarget;
 
     private String title;

@@ -2,19 +2,13 @@ package com.jambit.domain.feedback;
 
 import com.jambit.domain.common.audit.AuditableBaseEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-
 /**
  * Created by Tigran Melkonyan
  * Date: 2/20/25
  * Time: 12:14 AM
  */
-@Entity
 public class FeedbackTarget extends AuditableBaseEntity {
-
-    @Enumerated(EnumType.STRING)
+    
     private TargetType targetType;
 
     private String name;

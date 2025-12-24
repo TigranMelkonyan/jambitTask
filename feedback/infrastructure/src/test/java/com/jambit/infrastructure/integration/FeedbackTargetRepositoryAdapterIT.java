@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 @SpringBootTest
 @Transactional
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 class FeedbackTargetRepositoryAdapterIT {
 
     @Autowired
@@ -106,4 +106,3 @@ class FeedbackTargetRepositoryAdapterIT {
         assertTrue(pageModel.getTotalCount() > 0);
     }
 }
-

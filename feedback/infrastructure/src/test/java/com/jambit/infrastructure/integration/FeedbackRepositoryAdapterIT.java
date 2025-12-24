@@ -5,7 +5,6 @@ import com.jambit.domain.feedback.Feedback;
 import com.jambit.domain.feedback.FeedbackTarget;
 import com.jambit.domain.feedback.TargetType;
 import com.jambit.domain.repository.feedback.target.FeedbackTargetRepository;
-import com.jambit.infrastructure.outbound.persistence.FeedbackJpaRepository;
 import com.jambit.infrastructure.outbound.persistence.FeedbackRepositoryAdapter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 @SpringBootTest
 @Transactional
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 class FeedbackRepositoryAdapterIT {
 
     @Autowired
@@ -36,8 +35,7 @@ class FeedbackRepositoryAdapterIT {
     @Autowired
     private FeedbackTargetRepository feedbackTargetRepository;
 
-    @Autowired
-    private FeedbackJpaRepository feedbackJpaRepository;
+    
 
     private UUID feedbackId;
     private Feedback feedback;
@@ -60,8 +58,7 @@ class FeedbackRepositoryAdapterIT {
         feedbackTargetRepository.save(feedbackTarget);
         feedbackTargetId = feedbackTarget.getId();
         feedback.setFeedbackTarget(feedbackTarget);
-        feedbackJpaRepository.save(feedback);
-        feedbackId = feedback.getId();
+        feedbackId = feedbackRepositoryAdapter.save(feedback).getId();
         score = feedback.getScore();
         title = feedback.getTitle();
     }
@@ -126,4 +123,3 @@ class FeedbackRepositoryAdapterIT {
         assertTrue(exists);
     }
 }
-

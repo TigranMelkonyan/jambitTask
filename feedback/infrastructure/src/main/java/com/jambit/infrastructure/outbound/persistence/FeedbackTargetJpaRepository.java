@@ -1,6 +1,6 @@
 package com.jambit.infrastructure.outbound.persistence;
 
-import com.jambit.domain.feedback.FeedbackTarget;
+import com.jambit.infrastructure.outbound.persistence.entity.FeedbackTargetEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,13 +15,13 @@ import java.util.UUID;
  * Date: 2/20/25
  * Time: 2:33 PM
  */
-public interface FeedbackTargetJpaRepository extends JpaRepository<FeedbackTarget, UUID> {
+public interface FeedbackTargetJpaRepository extends JpaRepository<FeedbackTargetEntity, UUID> {
 
-    @Query("select f from FeedbackTarget f where f.status = 'ACTIVE'")
-    Page<FeedbackTarget> findAllFeedbackTargets(Pageable pageable);
+    @Query("select f from FeedbackTargetEntity f where f.status = 'ACTIVE'")
+    Page<FeedbackTargetEntity> findAllFeedbackTargets(Pageable pageable);
 
-    @Query("select f from FeedbackTarget f where f.id=:id and f.status = 'ACTIVE'")
-    Optional<FeedbackTarget> findByIdAndAuditStatus(@Param("id") UUID id);
+    @Query("select f from FeedbackTargetEntity f where f.id=:id and f.status = 'ACTIVE'")
+    Optional<FeedbackTargetEntity> findByIdAndAuditStatus(@Param("id") UUID id);
     
     boolean existsByName(String name);
 }

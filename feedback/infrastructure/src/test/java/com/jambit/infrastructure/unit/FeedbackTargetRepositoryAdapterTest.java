@@ -6,6 +6,8 @@ import com.jambit.domain.common.page.PageModel;
 import com.jambit.domain.feedback.FeedbackTarget;
 import com.jambit.infrastructure.outbound.persistence.FeedbackTargetJpaRepository;
 import com.jambit.infrastructure.outbound.persistence.FeedbackTargetRepositoryAdapter;
+import com.jambit.infrastructure.outbound.persistence.entity.FeedbackTargetEntity;
+import com.jambit.infrastructure.outbound.persistence.mapper.FeedbackTargetEntityMapper;
 import com.jambit.infrastructure.util.TestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -57,9 +59,10 @@ class FeedbackTargetRepositoryAdapterTest {
     void getById_ShouldReturnFeedbackTarget_WhenExists() {
         FeedbackTarget mockTarget = TestUtils.createFeedbackTarget();
         UUID targetId = mockTarget.getId();
+        FeedbackTargetEntity entity = FeedbackTargetEntityMapper.toEntity(mockTarget);
 
         when(repository.findByIdAndAuditStatus(targetId))
-                .thenReturn(Optional.of(mockTarget));
+                .thenReturn(Optional.of(entity));
 
         FeedbackTarget result = adapter.getById(targetId);
 
@@ -102,35 +105,36 @@ class FeedbackTargetRepositoryAdapterTest {
 
     @Test
     void save_ShouldReturnSavedFeedbackTarget() {
-        when(repository.save(feedbackTarget)).thenReturn(feedbackTarget);
+        when(repository.save(any(FeedbackTargetEntity.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
 
         FeedbackTarget result = adapter.save(feedbackTarget);
 
         assertNotNull(result);
         assertEquals(feedbackTargetId, result.getId());
-        verify(repository).save(feedbackTarget);
+        verify(repository).save(any(FeedbackTargetEntity.class));
     }
 
     @Test
     void delete_ShouldMarkAsDeleted_WhenFeedbackTargetExists() {
         when(repository.findByIdAndAuditStatus(feedbackTargetId))
-                .thenReturn(Optional.of(feedbackTarget));
+                .thenReturn(Optional.of(FeedbackTargetEntityMapper.toEntity(feedbackTarget)));
 
-        when(repository.save(any(FeedbackTarget.class))).thenReturn(feedbackTarget);
+        when(repository.save(any(FeedbackTargetEntity.class))).thenReturn(FeedbackTargetEntityMapper.toEntity(feedbackTarget));
 
         adapter.delete(feedbackTargetId);
 
-        assertEquals(ModelStatus.DELETED, feedbackTarget.getStatus());
-
         verify(repository).findByIdAndAuditStatus(feedbackTargetId);
-        verify(repository).save(feedbackTarget);
+        org.mockito.ArgumentCaptor<FeedbackTargetEntity> captor = org.mockito.ArgumentCaptor.forClass(FeedbackTargetEntity.class);
+        verify(repository).save(captor.capture());
+        assertEquals(ModelStatus.DELETED, captor.getValue().getStatus());
     }
 
     @Test
     void getAll_ShouldReturnPageModel() {
         int page = 0, size = 10;
-        List<FeedbackTarget> feedbackTargets = List.of(feedbackTarget);
-        Page<FeedbackTarget> mockPage = new PageImpl<>(feedbackTargets);
+        List<FeedbackTargetEntity> feedbackTargets = List.of(FeedbackTargetEntityMapper.toEntity(feedbackTarget));
+        Page<FeedbackTargetEntity> mockPage = new PageImpl<>(feedbackTargets);
         when(repository.findAllFeedbackTargets(PageRequest.of(page, size))).thenReturn(mockPage);
 
         PageModel<FeedbackTarget> result = adapter.getAll(page, size);
@@ -141,4 +145,3 @@ class FeedbackTargetRepositoryAdapterTest {
         verify(repository).findAllFeedbackTargets(PageRequest.of(page, size));
     }
 }
-

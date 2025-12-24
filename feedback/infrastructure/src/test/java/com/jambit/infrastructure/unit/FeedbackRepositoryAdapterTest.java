@@ -6,6 +6,9 @@ import com.jambit.domain.feedback.FeedbackTarget;
 import com.jambit.domain.feedback.TargetType;
 import com.jambit.infrastructure.outbound.persistence.FeedbackJpaRepository;
 import com.jambit.infrastructure.outbound.persistence.FeedbackRepositoryAdapter;
+import com.jambit.infrastructure.outbound.persistence.entity.FeedbackEntity;
+import com.jambit.infrastructure.outbound.persistence.entity.FeedbackTargetEntity;
+import com.jambit.infrastructure.outbound.persistence.mapper.FeedbackEntityMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,6 +46,7 @@ class FeedbackRepositoryAdapterTest {
     private UUID feedbackId;
 
     private Feedback feedback;
+    private FeedbackEntity feedbackEntity;
 
     @BeforeEach
     void setUp() {
@@ -55,11 +59,12 @@ class FeedbackRepositoryAdapterTest {
         feedback.setUserId(UUID.randomUUID());
         feedbackTarget.setId(UUID.randomUUID());
         feedback.setFeedbackTarget(feedbackTarget);
+        feedbackEntity = FeedbackEntityMapper.toEntity(feedback);
     }
 
     @Test
     void findById_ShouldReturnFeedback_WhenExists() {
-        when(feedbackJpaRepository.findById(feedbackId)).thenReturn(Optional.of(feedback));
+        when(feedbackJpaRepository.findById(feedbackId)).thenReturn(Optional.of(feedbackEntity));
 
         Feedback result = feedbackRepositoryAdapter.findById(feedbackId);
 
@@ -76,7 +81,7 @@ class FeedbackRepositoryAdapterTest {
 
     @Test
     void getByUserId_ShouldReturnListOfFeedback_WhenExists() {
-        List<Feedback> feedbackList = List.of(feedback);
+        List<FeedbackEntity> feedbackList = List.of(feedbackEntity);
         when(feedbackJpaRepository.findByUserId(feedback.getUserId())).thenReturn(feedbackList);
 
         List<Feedback> result = feedbackRepositoryAdapter.getByUserId(feedback.getUserId());
@@ -87,7 +92,7 @@ class FeedbackRepositoryAdapterTest {
 
     @Test
     void save_ShouldReturnSavedFeedback() {
-        when(feedbackJpaRepository.save(feedback)).thenReturn(feedback);
+        when(feedbackJpaRepository.save(org.mockito.ArgumentMatchers.any(FeedbackEntity.class))).thenReturn(feedbackEntity);
 
         Feedback result = feedbackRepositoryAdapter.save(feedback);
 
@@ -126,4 +131,3 @@ class FeedbackRepositoryAdapterTest {
         assertFalse(result);
     }
 }
-
